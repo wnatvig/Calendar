@@ -1,0 +1,22 @@
+1. Where, and how often will you meet while working?
+	We will meet at least once or twice a week at school.
+2. How do you communicate in the group - what channels? - when?
+	Discord and IRL. Online almost every day and when needed. IRL, when discussed, but initially once or twice a week.
+3. How will you use version control (git) and other tools you might agree on, like Trello or Overleaf?
+	We will use GitHub if necessary overleaf for the LaTeX file.
+4. How do you coordinate the final hand in?
+	End of week 10 we will meet up and do an overview of the project to ensure that everything is in order and if it is not fix that, then reconvene at the beginning of week 11 and turn it in.   
+5. How do you ensure everyone knows what they should do after their current task, and  what everyone else is working on?
+	We will have (almost) daily scrum meeting to check in on what everyone is doing and then have a board/list of tasks that need doing, tasks in progress, and tasks done. If someone discovers that the tasks that need
+	doing is empty then their job will be to plan and fill it up with new ones.
+
+Dealing with surprises
+1. What should you do if someone feels left out?
+	We should find out the reason as to why. Then if possible try to resolve it on our own. Then if that doesn't work we will have to contact our supervisor for help.
+2. What should you do if someone got stuck on their current task?
+	They should bring this up on our scrum meetings and then the others can try to help by giving advice. If that doesn't work then that person will switch tasks with someone in the group.
+3. What happens if someone feel another person isn't doing their fair share?
+	Then that person needs to bring it up at a meeting or similar. Then if possible try to resolve it on our own. Then if that doesn't work we will have to contact our supervisor for help.
+4. What happens if someone is not communicating in the maner of frequency agreed upon?
+	Then we will have to bring this up as a group, find out the underlying reason as to why this person is not communicating as much as agreed upon. If there is no just cause, as agreed upon by the rest of the group, then we will 	take action if necessary. 
+	 
