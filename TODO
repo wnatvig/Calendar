@@ -1,0 +1,9 @@
+1. Fill in Month record with data from Date object methods
+   - set month_length based on month and year (leap years)
+   - set first_weekday based on current weekday + current date
+   - set week numbers
+   - set events_index with get_month_index() [requires 2.]
+
+2. Initialize event list
+   - read events from file [later]
+   - set base_year and base_month
