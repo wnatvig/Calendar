@@ -7,3 +7,5 @@
 2. Initialize event list
    - read events from file [later]
    - set base_year and base_month
+
+3. Print month to terminal (Month and Event list)
