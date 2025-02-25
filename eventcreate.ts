@@ -13,7 +13,7 @@ import {
  * @param description a string with a description of the event
  * @returns an event of type Event
  */
-function make_event(day: number, month: number, 
+export function make_event(day: number, month: number, 
                     year: number, time_start: number, 
                     time_end: number, description: string): Event {
     return {day, month, year, time_start, time_end, description}
@@ -27,7 +27,7 @@ function make_event(day: number, month: number,
  * @param events an array of events
  * @returns a list of events of type Event_list
  */
-function make_event_list(base_year: number, base_month: number, events: Array<Array<Event>>): Event_list{
+export function make_event_list(base_year: number, base_month: number, events: Array<Array<Event>>): Event_list{
     return {base_year, base_month, events}
 }
 
@@ -37,7 +37,7 @@ function make_event_list(base_year: number, base_month: number, events: Array<Ar
  * @param event_list a list of events with type Event_list
  * @returns a list of events with type Event_list
  */
-function event_to_event_list(event: Event, event_list: Event_list): Event_list{
+export function event_to_event_list(event: Event, event_list: Event_list): Event_list{
     const month_index = get_month_index(event_list.base_year, event_list.base_month, 
                                         event.year, event.month);
     
