@@ -1,4 +1,4 @@
-type Month = {						//ex.
+export type Month = {						//ex.
     year: number,					//2025
     month: number,					//2
     month_length: number			//28
@@ -7,7 +7,7 @@ type Month = {						//ex.
     events_index: number,
 };
 
-type Event = {						//ex.
+export type Event = {						//ex.
     day: number,					//22
     month: number,					//3
     year: number,					//2025
@@ -16,7 +16,7 @@ type Event = {						//ex.
     description: string				//"tentamen"
 }
 
-type Event_list = {					//ex.
+export type Event_list = {					//ex.
 	base_year: number,				//2025
 	base_month: number,				//2
 	events: Array<Array<Event>>;
@@ -24,7 +24,7 @@ type Event_list = {					//ex.
 
 
 //TODO error/invalid/illegal input check
-function get_month_index(base_year: number, base_month: number,
+export function get_month_index(base_year: number, base_month: number,
 						 year: number, month: number): number {
 	let year_diff = year - base_year;
 	let month_diff = month - base_month;
