@@ -1,19 +1,19 @@
-export function get_year(date: Date): number {
+export function get_year(): number {
 	let date: Date = new Date();
 	return date.getFullYear();
 }
 
-export function get_month(date: Date): number {
+export function get_month(): number {
 	let date: Date = new Date();
 	return date.getMonth() + 1;
 }
 
-export function get_date(date: Date): number {
+export function get_date(): number {
 	let date: Date = new Date();
 	return date.getDate();
 }
 
-export function get_weekday(date: Date): number {
+export function get_weekday(): number {
 	let date: Date = new Date();
 
 	let d = date.getDay();
