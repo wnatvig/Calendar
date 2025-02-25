@@ -1,6 +1,6 @@
 import {
     Month, Event, Event_list, get_month_index
-} from './idéer';
+} from './types';
 
 function make_event(day: number, month: number, 
                     year: number, time_start: number, 
