@@ -1,5 +1,6 @@
 import * as td from './time_date';
 import type { Month } from './types';
+import { NAMES_WEEKDAYS, NAMES_MONTHS, MONTH_LENGTHS } from './defs';
 
 function init_month(): Month {
 	let month: Month = {
@@ -29,23 +30,6 @@ function init_month(): Month {
 
 	return month;
 }
-
-
-const MONTH_LENGTHS: Array<number> = [
-	0,
-	31,
-	28,
-	31,
-	30,
-	31,
-	30,
-	31,
-	31,
-	30,
-	31,
-	30,
-	31,
-];
 
 
 function month_len(year: number, month: number): number {

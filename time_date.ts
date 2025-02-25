@@ -22,29 +22,3 @@ export function get_weekday(): number {
 
 	return d;
 }
-
-export const NAMES_WEEKDAYS: Array<string> = [
-	"",
-	"Monday",
-	"Tuesday",
-	"Wednesday",
-	"Thursday",
-	"Friday",
-	"Saturday",
-	"Sunday"
-];
-export const NAMES_MONTHS: Array<string> = [
-	"",
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December"
-];
