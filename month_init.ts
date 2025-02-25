@@ -1,4 +1,5 @@
-import * from 'time';
+import * as td from './time_date';
+import type { Month } from './types';
 
 function init_month(): Month {
 	let month: Month = {
@@ -10,12 +11,12 @@ function init_month(): Month {
 		events_index: 0,
 	};
 
-	month.year = get_year();
-	month.month = get_month();
+	month.year = td.get_year();
+	month.month = td.get_month();
 	month.month_length = month_len(month.year, month.month);
 
-	let date = get_date();
-	let day = get_weekday();
+	let date = td.get_date();
+	let day = td.get_weekday();
 
 	while (date > 1) {
 		date--;
@@ -53,9 +54,11 @@ function month_len(year: number, month: number): number {
 
 	if (leap_year(year))
 		return MONTH_LENGTHS[month] + 1;
+	else
+		return MONTH_LENGTHS[month];
 }
 
-function leap_year(year): boolean {
+function leap_year(year: number): boolean {
 	if (year % 4 === 0) {
 		if (year % 100 === 0) {
 			if (year % 400 === 0) {
