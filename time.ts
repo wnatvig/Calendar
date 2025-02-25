@@ -1,18 +1,21 @@
-let date: Date = new Date();
-
-function get_year(date: Date): number {
+export function get_year(): number {
+	let date: Date = new Date();
 	return date.getFullYear();
 }
 
-function get_month(date: Date): number {
+export function get_month(): number {
+	let date: Date = new Date();
 	return date.getMonth() + 1;
 }
 
-function get_date(date: Date): number {
+export function get_date(): number {
+	let date: Date = new Date();
 	return date.getDate();
 }
 
-function get_weekday(date: Date): number {
+export function get_weekday(): number {
+	let date: Date = new Date();
+
 	let d = date.getDay();
 	if (d === 0)
 		d = 7;
@@ -20,7 +23,7 @@ function get_weekday(date: Date): number {
 	return d;
 }
 
-const WEEKDAYS: Array<string> = [
+export const NAMES_WEEKDAYS: Array<string> = [
 	"",
 	"Monday",
 	"Tuesday",
@@ -30,7 +33,7 @@ const WEEKDAYS: Array<string> = [
 	"Saturday",
 	"Sunday"
 ];
-const MONTHS: Array<string> = [
+export const NAMES_MONTHS: Array<string> = [
 	"",
 	"January",
 	"February",
@@ -45,8 +48,3 @@ const MONTHS: Array<string> = [
 	"November",
 	"December"
 ];
-
-console.log(`year:    ${get_year(date)}`);
-console.log(`month:   ${get_month(date)} (${MONTHS[get_month(date)]})`);
-console.log(`date:    ${get_date(date)}`);
-console.log(`weekday: ${get_weekday(date)} (${WEEKDAYS[get_weekday(date)]})`);
