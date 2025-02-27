@@ -16,7 +16,7 @@ function divide_days_in_weeks(month:Month): Array<number>{
 
 function days_with_events(event_array: Array<Event>): Array<number> {
     let event_days: Array<number> = [];
-    for (let i = 0; i <event_array.length; i++){
+    for (let i = 0; event_array !== undefined && i < event_array.length; i++){
         event_days[i] = event_array[i].day;
     }
     return event_days;
