@@ -154,34 +154,94 @@ export function get_next_month(prev_month: Month, eventlist: Event_list): Month 
 	month.first_weekday = (((prev_month.first_weekday - 1) + month_length(prev_month.year, prev_month.month)) % 7) + 1;
 
 
-	date = 1;
-	day = month.first_weekday;
-	week = prev_month.week_numbers[prev_month.week_numbers.length - 1];	//last week of previous month
-	w_index = -1;
+	//commented code works
+	//date = 1;
+	//day = month.first_weekday;
+	//week = prev_month.week_numbers[prev_month.week_numbers.length - 1];	//last week of previous month
+	//w_index = -1;
 
-	while (date <= month.month_length) {
-		// WHOLE BLOCK IS COPIED FROM load_weeks() WITH ADJUSTED VARIABLE NAMES, PUT IN A FUNCTION?
-		if (day === MONDAY) {
-			if ((week === 52 || week === 53) && month.month == 1)
-				week = 1;
-			
-			else if ((week === 52 || week === 53) && date >= 29)
-				week = 1;
+	//while (date <= month.month_length) {
+	//	// WHOLE BLOCK IS COPIED FROM load_weeks() WITH ADJUSTED VARIABLE NAMES, PUT IN A FUNCTION?
+	//	if (day === MONDAY) {
+	//		if ((week === 52 || week === 53) && month.month == 1)
+	//			week = 1;
+	//		
+	//		else if ((week === 52 || week === 53) && date >= 29)
+	//			week = 1;
 
-			else
-				week++;
-		}
+	//		else
+	//			week++;
+	//	}
 
-		if (month.week_numbers[w_index] != week || w_index === -1) {
-			w_index++;
-			month.week_numbers[w_index] = week;
-		}
+	//	if (month.week_numbers[w_index] != week || w_index === -1) {
+	//		w_index++;
+	//		month.week_numbers[w_index] = week;
+	//	}
 
-		date++;
-		day++;
-		if (day === 8)
-			day = 1;
+	//	date++;
+	//	day++;
+	//	if (day === 8)
+	//		day = 1;
+	//}
+
+	load_weeks(month.year, month.month, month.first_weekday, month.week_numbers);
+
+	month.events_index = get_month_index(eventlist.base_year, eventlist.base_month, month.year, month.month);
+
+	return month;
+}
+
+export function get_previous_month(future_month: Month, eventlist: Event_list): Month {
+	let month: Month = {
+		year: 0,
+		month: 0,
+		month_length: 0,
+		first_weekday: 0,
+		week_numbers: [],
+		events_index: 0,
+	};
+	let week, w_index;
+	let date, day;
+
+	month.year = future_month.year;
+	month.month = future_month.month - 1;
+	if (month.month === 0) {
+		month.month = 12;
+		month.year--;
 	}
+	month.month_length = month_length(month.year, month.month);
+	month.first_weekday = (((((future_month.first_weekday - 1) - month_length(month.year, month.month)) % 7) + 7) % 7) + 1;
+
+
+	//commented code is unfinished and does not work, i use load_weeks instead of this mess because im lazy
+	//date = month.month_len;
+	//day = month.first_weekday;
+	//week = future_month.week_numbers[0];	//last week of future/current_month
+	//w_index = -1;
+
+	//while (date >= 1) {
+	//	if (day === SUNDAY) {
+	//		if (week === 1) {
+	//			//??
+	//		}
+
+	//		else
+	//			week--;
+	//	}
+
+	//	//THEY GET ADDED IN REVERSE
+	//	if (month.week_numbers[w_index] != week || w_index === -1) {
+	//		w_index++;
+	//		month.week_numbers[w_index] = week;
+	//	}
+
+	//	date--;
+	//	day--;
+	//	if (day === 0)
+	//		day = 7;
+	//}
+
+	load_weeks(month.year, month.month, month.first_weekday, month.week_numbers);
 
 	month.events_index = get_month_index(eventlist.base_year, eventlist.base_month, month.year, month.month);
 
@@ -238,3 +298,7 @@ console.log(m3);
 console.log(get_next_month(m1, el));
 console.log(get_next_month(m2, el));
 console.log(get_next_month(m3, el));
+
+console.log(get_previous_month(get_next_month(m1, el), el));
+console.log(get_previous_month(get_next_month(m2, el), el));
+console.log(get_previous_month(get_next_month(m3, el), el));
