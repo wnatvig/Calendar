@@ -9,7 +9,7 @@ import { NAMES_WEEKDAYS, NAMES_MONTHS, MONTH_LENGTHS,
 		SATURDAY,
 		SUNDAY } from './defs';
 
-function init_month(eventlist: Event_list): Month {
+function init_month(eventlist: Event_list, year_arg?: number, month_arg?: number, date_arg?: number, day_arg?: number): Month {
 	let month: Month = {
 		year: 0,
 		month: 0,
@@ -18,15 +18,22 @@ function init_month(eventlist: Event_list): Month {
 		week_numbers: [],
 		events_index: 0,
 	};
+	let date, day;
 
-	// set year, month, and month_length
-	month.year = td.get_current_year();
-	month.month = td.get_current_month();
+	// if year/month/date/day is given, use these
+	if (year_arg !== undefined && month_arg !== undefined && date_arg !== undefined && day_arg !== undefined) {
+		month.year = year_arg;
+		month.month = month_arg;
+		date = date_arg;
+		day = day_arg;
+	} else { // otherwise use current year/month/date/day
+		month.year = td.get_current_year();
+		month.month = td.get_current_month();
+		date = td.get_current_date();
+		day = td.get_current_weekday();
+	}
+
 	month.month_length = month_length(month.year, month.month);
-
-	// current day and date
-	let date = td.get_current_date();
-	let day = td.get_current_weekday();
 
 	// loop back to date == 1 to get weekday of first day of month
 	while (date > 1) {
@@ -162,3 +169,12 @@ function leap_year(year: number): boolean {
 
 	return false;
 }
+
+let el: Event_list = {base_year: 2025, base_month: 1, events: []};
+let m1 = init_month(el);
+let m2 = init_month(el, 2025, 12, 5, 5);
+let m3 = init_month(el, 2026, 1, 31, 6);
+
+console.log(m1);
+console.log(m2);
+console.log(m3);
