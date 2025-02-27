@@ -1,15 +1,21 @@
 import {
-    Month, Event, Event_list, get_month_index
+    Month, Event, Event_list
 } from './types';
+import { get_month_index } from './month'
 
 function make_event(day: number, month: number, 
                     year: number, time_start: number, 
                     time_end: number, description: string): Event {
-    return {day, month, year, time_start, time_end, description}
-
+    return {day: day,
+			month: month,
+			year: year,
+			time_start: time_start,
+			time_end: time_end,
+			description: description};
 }
 
 function event_to_event_list(event: Event, event_list: Event_list): Event_list{
+	//TODO THIS month_index CAN BE NEGATIVE, CHECK NECESSARY SOMEWHERE
     const month_index = get_month_index(event_list.base_year, event_list.base_month, 
                                         event.year, event.month);
     
