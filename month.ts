@@ -20,13 +20,13 @@ function init_month(eventlist: Event_list): Month {
 	};
 
 	// set year, month, and month_length
-	month.year = td.get_year();
-	month.month = td.get_month();
+	month.year = td.get_current_year();
+	month.month = td.get_current_month();
 	month.month_length = month_length(month.year, month.month);
 
 	// current day and date
-	let date = td.get_date();
-	let day = td.get_weekday();
+	let date = td.get_current_date();
+	let day = td.get_current_weekday();
 
 	// loop back to date == 01 to get weekday of first day of month
 	while (date > 1) {
