@@ -74,6 +74,7 @@ export function display_month(month: Month, Event_list: Event_list): void{
     console.log();
 };
 
+/*
 const event1: Event = {day: 22, 
                        month: 1,
                        year:2025,
@@ -97,3 +98,4 @@ const month1: Month= {year: 2025,
 const Eent_array1: Event_list = {base_year:2025, base_month:1, events: [[event1, event2]]};
 
 display_month(month1, Eent_array1);
+*/

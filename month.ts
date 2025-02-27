@@ -285,20 +285,3 @@ function leap_year(year: number): boolean {
 
 	return false;
 }
-
-let el: Event_list = {base_year: 2025, base_month: 1, events: []};
-let m1 = init_month(el);
-let m2 = init_month(el, 2025, 12, 5, 5);
-let m3 = init_month(el, 2026, 1, 31, 6);
-
-console.log(m1);
-console.log(m2);
-console.log(m3);
-
-console.log(get_next_month(m1, el));
-console.log(get_next_month(m2, el));
-console.log(get_next_month(m3, el));
-
-console.log(get_previous_month(get_next_month(m1, el), el));
-console.log(get_previous_month(get_next_month(m2, el), el));
-console.log(get_previous_month(get_next_month(m3, el), el));
