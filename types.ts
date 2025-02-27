@@ -24,7 +24,7 @@ export type Event_list = {					//ex.
 
 
 //TODO error/invalid/illegal input check
-function get_month_index(base_year: number, base_month: number,
+export function get_month_index(base_year: number, base_month: number,
 						 year: number, month: number): number {
 	let year_diff = year - base_year;
 	let month_diff = month - base_month;
