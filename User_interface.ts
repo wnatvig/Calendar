@@ -1,7 +1,7 @@
 
 import { Console } from "console";
 import { get_month, NAMES_MONTHS, NAMES_WEEKDAYS } from "./time";
-import { Month, Event_list, Event, get_month_index } from "./types";
+import { Month, Event_list, Event} from "./types";
 
 
 
