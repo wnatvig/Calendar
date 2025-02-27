@@ -28,7 +28,7 @@ function init_month(eventlist: Event_list): Month {
 	let date = td.get_current_date();
 	let day = td.get_current_weekday();
 
-	// loop back to date == 01 to get weekday of first day of month
+	// loop back to date == 1 to get weekday of first day of month
 	while (date > 1) {
 		date--;
 		day--;
@@ -38,7 +38,10 @@ function init_month(eventlist: Event_list): Month {
 
 	month.first_weekday = day;
 
+	// load weeks to month.week_numbers
 	load_weeks(month.year, month.month, month.first_weekday, month.week_numbers);
+
+	// store events_index, NOTE: index might be invalid (negative)
 	month.events_index = get_month_index(eventlist.base_year, eventlist.base_month, month.year, month.month);
 
 	return month;
@@ -50,7 +53,8 @@ function load_weeks(year: number, target_month: number, first_weekday: number, w
 	let day = first_weekday;
 	let date = 1;	// date corresponding to day
 
-	let week;
+	let week, w_index;
+	let month_len;
 
 	// loop back to january 1
 	while (month > 1) {
@@ -71,6 +75,7 @@ function load_weeks(year: number, target_month: number, first_weekday: number, w
 	// now: date == 1, month == 1
 
 	// get first week based on what weekday january 1st is
+	// see https://en.wikipedia.org/wiki/ISO_week_date#First_week
 	if (day === MONDAY || day === TUESDAY || day === WEDNESDAY || day === THURSDAY) {
 		week = 1;
 	}
@@ -84,30 +89,30 @@ function load_weeks(year: number, target_month: number, first_weekday: number, w
 		week = 52;
 	}
 
+
 	// loop forward to target month
 	
-	let month_len;
-	let week_i = -1;
-
+	w_index = -1;	// index in week_numbers of most recently added week
 	while (month <= target_month) {
 		month_len = month_length(year, month);
 		date = 1;
 
 		while (date <= month_len) {
 			if (day === MONDAY) {
-				if ((week === 52 || week === 53) && month == 1)
+				if ((week === 52 || week === 53) && month == 1)	// first week of january is 52/53
 					week = 1;
 				
-				else if ((week === 52 || week === 53) && date >= 29)
+				else if ((week === 52 || week === 53) && date >= 29) // last week of december is 1
 					week = 1;
 
 				else
 					week++;
 			}
 
-			if (month === target_month && (week_numbers[week_i] != week || week_i === -1)) {
-				week_i++;
-				week_numbers[week_i] = week;
+			// add week to week_numbers if we have reached target_month and week isn't already in week_numbers
+			if (month === target_month && (week_numbers[w_index] != week || w_index === -1)) {
+				w_index++;
+				week_numbers[w_index] = week;
 			}
 
 			date++;
