@@ -9,7 +9,7 @@ import { NAMES_WEEKDAYS, NAMES_MONTHS, MONTH_LENGTHS,
 		SATURDAY,
 		SUNDAY } from './defs';
 
-function init_month(eventlist: Event_list, year_arg?: number, month_arg?: number, date_arg?: number, day_arg?: number): Month {
+export function init_month(eventlist: Event_list, year_arg?: number, month_arg?: number, date_arg?: number, day_arg?: number): Month {
 	let month: Month = {
 		year: 0,
 		month: 0,
@@ -132,6 +132,62 @@ function load_weeks(year: number, target_month: number, first_weekday: number, w
 	}
 }
 
+export function get_next_month(prev_month: Month, eventlist: Event_list): Month {
+	let month: Month = {
+		year: 0,
+		month: 0,
+		month_length: 0,
+		first_weekday: 0,
+		week_numbers: [],
+		events_index: 0,
+	};
+	let week, w_index;
+	let date, day;
+
+	month.year = prev_month.year;
+	month.month = prev_month.month + 1;
+	if (month.month === 13) {
+		month.month = 1;
+		month.year++;
+	}
+	month.month_length = month_length(month.year, month.month);
+	month.first_weekday = (((prev_month.first_weekday - 1) + month_length(prev_month.year, prev_month.month)) % 7) + 1;
+
+
+	date = 1;
+	day = month.first_weekday;
+	week = prev_month.week_numbers[prev_month.week_numbers.length - 1];	//last week of previous month
+	w_index = -1;
+
+	while (date <= month.month_length) {
+		// WHOLE BLOCK IS COPIED FROM load_weeks() WITH ADJUSTED VARIABLE NAMES, PUT IN A FUNCTION?
+		if (day === MONDAY) {
+			if ((week === 52 || week === 53) && month.month == 1)
+				week = 1;
+			
+			else if ((week === 52 || week === 53) && date >= 29)
+				week = 1;
+
+			else
+				week++;
+		}
+
+		if (month.week_numbers[w_index] != week || w_index === -1) {
+			w_index++;
+			month.week_numbers[w_index] = week;
+		}
+
+		date++;
+		day++;
+		if (day === 8)
+			day = 1;
+	}
+
+	month.events_index = get_month_index(eventlist.base_year, eventlist.base_month, month.year, month.month);
+
+	return month;
+}
+
 //TODO error/invalid/illegal input check
 export function get_month_index(base_year: number, base_month: number,
 						 year: number, month: number): number {
@@ -178,3 +234,7 @@ let m3 = init_month(el, 2026, 1, 31, 6);
 console.log(m1);
 console.log(m2);
 console.log(m3);
+
+console.log(get_next_month(m1, el));
+console.log(get_next_month(m2, el));
+console.log(get_next_month(m3, el));
