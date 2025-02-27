@@ -1,5 +1,3 @@
-
-import { Console } from "console";
 import { get_month, NAMES_MONTHS, NAMES_WEEKDAYS } from "./time_date";
 import { Month, Event_list, Event} from "./types";
 
@@ -98,3 +96,5 @@ const month1: Month= {year: 2025,
 const Eent_array1: Event_list = {base_year:2025, base_month:1, events: [[event1, event2]]};
 
 display_month(month1, Eent_array1);
+
+export function User_input
