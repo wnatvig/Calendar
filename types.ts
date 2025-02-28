@@ -21,13 +21,3 @@ export type Event_list = {					//ex.
 	base_month: number,				//2
 	events: Array<Array<Event>>;
 };
-
-
-//TODO error/invalid/illegal input check
-export function get_month_index(base_year: number, base_month: number,
-						 year: number, month: number): number {
-	let year_diff = year - base_year;
-	let month_diff = month - base_month;
-
-	return year_diff * 12 + month_diff;
-}
