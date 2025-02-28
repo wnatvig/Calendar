@@ -1,6 +1,7 @@
 import { Console } from "console";
 import { NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
 import { Month, Event_list, Event} from "./types";
+import { get_current_month } from "./time_date";
 
 
 
@@ -99,3 +100,45 @@ const Eent_array1: Event_list = {base_year:2025, base_month:1, events: [[event1,
 
 display_month(month1, Eent_array1);
 */
+
+export type Choices = Array<[string, string]>;
+/**
+ * Presents the user with a bunch of choices and a prompt asking them to write 
+ * input a valid comand
+ * @param {string} Prompt - A promt to cause them to
+ * @param {Choices} choices - An array of pairs where the first element is a valid 
+ * comand and the second element is a description of the comand 
+ * @returns A valid answer from the user
+ */
+export function User_input(Prompt: string, choices: Choices):string{
+    //This is the function that enables user input
+    const pt = require('prompt-sync')();
+
+    //To split choices into 2 arrays 1 with descriptions, 1 with the valid entries
+    const valid_entries:Array<string> =[];
+    for (let choice of choices) {
+        console.log(`${choice[1]} - ${choice[0]}`)
+        valid_entries.push(choice[0]);
+    };
+
+    let user_answer = "";
+    while (!valid_entries.includes(user_answer)){
+        user_answer = pt(`${Prompt}`);
+        if(!valid_entries.includes(user_answer)) {
+            console.log();
+            console.log("Invalid entry! Please try again.");
+            console.log();
+        } else {}
+    };
+    return user_answer;
+};
+
+//Test for user_input
+//cosnole.log(User_input("Enter[y/n]: ",[["yes", "y"], ["no", "n"]]));
+
+/**
+ * 
+ */
+export function switch_month():void{
+    let current_month = get_current_month();
+}
