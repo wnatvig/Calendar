@@ -1,12 +1,11 @@
-import { Console } from "console";
 import { MONTH_LENGTHS, NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
 import { Month, Event_list, Event} from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
-import { isNumber } from "util";
 import { event_to_event_list, make_event } from "./eventcreate";
 
 
-
+//Makes an array with all the dates in the right place so it can be divided
+//between the weeks evenly
 function divide_days_in_weeks(month:Month): Array<number>{
     let days_array:Array<number> = new Array(month.week_numbers.length * 7);
     for( let i = 1; i <= month.week_numbers.length * 7; i++){
@@ -16,7 +15,7 @@ function divide_days_in_weeks(month:Month): Array<number>{
     };
     return days_array;
 };
-
+//Creates an array with all the days that have events
 function days_with_events(event_array: Array<Event>): Array<number> {
     let event_days: Array<number> = [];
     for (let i = 0; event_array !== undefined && i < event_array.length; i++){
@@ -138,12 +137,14 @@ export function User_input(Prompt: string, choices: Choices):string{
 //Test for user_input
 //console.log(User_input("Enter[y/n]: ",[["y", "yes"], ["n", "no"]]));
 
-/**
- * 
- */
-export function switch_month():void{
-    let current_month = get_current_month();
-}
+// /**
+//  * 
+//  */
+// export function switch_month():void{
+//     let current_month = get_current_month();
+//}
+
+
 // Helper: Prompt for a number with validation.
 function prompt_for_number(prompt_text: string, validate: (num: number) => string | null): number {
     const pt = require('prompt-sync')();
@@ -261,8 +262,8 @@ export function user_add_event(event_list: Event_list): void {
 
 
 
-export function user_change_event(event_list: Event_list): void{
+// export function user_change_event(event_list: Event_list): void{
 
-}
+// }
 
 //user_add_event(Eent_array1);
