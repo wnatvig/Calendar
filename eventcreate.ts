@@ -13,6 +13,16 @@ export function make_event(day: number, month: number,
 			time_end: time_end,
 			description: description};
 }
+export function make_event_list(base_year: number,
+	                            base_month: number,
+                                events: Array<Array<Event>>): Event_list{
+    return {
+        base_year: base_year,
+        base_month: base_month,
+        events: events,
+        };
+
+}
 
 export function event_to_event_list(event: Event, event_list: Event_list): Event_list{
 	//TODO THIS month_index CAN BE NEGATIVE, CHECK NECESSARY SOMEWHERE
