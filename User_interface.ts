@@ -1,7 +1,9 @@
 import { Console } from "console";
-import { NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
+import { MONTH_LENGTHS, NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
 import { Month, Event_list, Event} from "./types";
-import { get_current_month } from "./time_date";
+import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
+import { isNumber } from "util";
+import { make_event } from "./eventcreate";
 
 
 
@@ -75,7 +77,7 @@ export function display_month(month: Month, Event_list: Event_list): void{
     console.log();
 };
 
-/*
+
 const event1: Event = {day: 22, 
                        month: 1,
                        year:2025,
@@ -98,8 +100,8 @@ const month1: Month= {year: 2025,
 
 const Eent_array1: Event_list = {base_year:2025, base_month:1, events: [[event1, event2]]};
 
-display_month(month1, Eent_array1);
-*/
+//display_month(month1, Eent_array1);
+
 
 export type Choices = Array<[string, string]>;
 /**
@@ -134,7 +136,7 @@ export function User_input(Prompt: string, choices: Choices):string{
 };
 
 //Test for user_input
-//cosnole.log(User_input("Enter[y/n]: ",[["yes", "y"], ["no", "n"]]));
+//console.log(User_input("Enter[y/n]: ",[["y", "yes"], ["n", "no"]]));
 
 /**
  * 
@@ -142,3 +144,121 @@ export function User_input(Prompt: string, choices: Choices):string{
 export function switch_month():void{
     let current_month = get_current_month();
 }
+// Helper: Prompt for a number with validation.
+function prompt_for_number(prompt_text: string, validate: (num: number) => string | null): number {
+    const pt = require('prompt-sync')();
+    while (true) {
+        const input = pt(prompt_text);
+        const num = Number(input);
+        if (isNaN(num)) {
+            console.log("Invalid entry: Not a number");
+            continue;
+        }
+        const error = validate(num);
+        if (error) {
+            console.log(error);
+            continue;
+        }
+        return num;
+    }
+}
+
+// Helper: Prompt for a time value in hh:mm format with validation.
+function prompt_for_time(prompt_text: string, min_time: number = 0): number {
+    const pt = require('prompt-sync')();
+    while (true) {
+        console.log("Note: Please input times using standard 24 hour notation (e.g., 11:11)");
+        const userTime = pt(prompt_text);
+        const parts = userTime.split(":");
+        if (parts.length !== 2) {
+            console.log("Invalid entry: Incorrect formatting");
+            continue;
+        }
+        const hour = Number(parts[0]);
+        const minute = Number(parts[1]);
+        if (isNaN(hour) || hour < 0 || hour > 23) {
+            console.log("Invalid entry: That is not a valid hour");
+            continue;
+        }
+        if (isNaN(minute) || minute < 0 || minute > 59) {
+            console.log("Invalid entry: Not a valid minute");
+            continue;
+        }
+        const time = hour * 100 + minute;
+        if (time < min_time) {
+            let min_minute:string | number = min_time % 100
+            let min_hour: string | number = (min_time - min_minute)/100;
+            if (min_minute < 10){
+                min_minute = `0${min_minute}`
+            } else {}
+
+            if (min_hour < 10){
+                min_hour = `0${min_hour}`
+            } else {}
+
+            console.log(`Invalid entry: End time must be at least ${min_hour}:${min_minute}`);
+            continue;
+        }
+        if (time > 2359) {
+            console.log("Invalid entry: Time cannot exceed 23:59");
+            continue;
+        }
+        return time;
+    }
+}
+//TODO: Maybe add so that you can ad events that are earlier than the days date
+/**
+ * 
+ * @param event_list 
+ */ 
+export function user_add_event(event_list: Event_list): void {
+    const pt = require('prompt-sync')();
+    const current_year = get_current_year();
+    const current_month = get_current_month();
+    const current_date = get_current_date();
+
+    // Get valid year (cannot be before the current year)
+    const year = prompt_for_number("Year: ", (num: number) => {
+        return num < current_year ? "Invalid entry: Too early year" : null;
+    });
+
+    // Build month choices based on the selected year.
+    let month_choices: Array<[string, string]> = [];
+    const start_month = year === current_year ? current_month : 1;
+    for (let i = start_month; i < NAMES_MONTHS.length; i++) {
+        month_choices.push([`${i}`, NAMES_MONTHS[i]]);
+    }
+    console.log("Please pick a month: ");
+    const month = Number(User_input("Month: ", month_choices));
+
+    // Get valid date (must be within the month's range and not in the past if current month/year)
+    const date = prompt_for_number("Date: ", (num: number) => {
+        if (num < 1 || num > MONTH_LENGTHS[month]) {
+            return `Invalid date: ${NAMES_MONTHS[month]} only has ${MONTH_LENGTHS[month]} days`;
+        }
+        if (year === current_year && month === current_month && num < current_date) {
+            return "Invalid entry: Date already passed";
+        }
+        return null;
+    });
+
+    // Get valid start and end times.
+    const time_start = prompt_for_time("Start time: ");
+    const time_end = prompt_for_time("End time: ", time_start);
+
+    // Get event description.
+    const description = pt("Description: ");
+
+    // Create the new event.
+    const newEvent = make_event(date, month, year, time_start, time_end, description);
+
+    console.log("Event added:", newEvent);
+}
+
+
+
+export function user_change_event(event_list: Event_list): void{
+
+}
+
+user_add_event(Eent_array1);
