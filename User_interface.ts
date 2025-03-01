@@ -3,7 +3,7 @@ import { MONTH_LENGTHS, NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
 import { Month, Event_list, Event} from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
 import { isNumber } from "util";
-import { make_event } from "./eventcreate";
+import { event_to_event_list, make_event } from "./eventcreate";
 
 
 
@@ -78,27 +78,27 @@ export function display_month(month: Month, Event_list: Event_list): void{
 };
 
 
-const event1: Event = {day: 22, 
-                       month: 1,
-                       year:2025,
-                       time_start:1,
-                       time_end: 1,
-                       description: "Tadläkare"};
+// const event1: Event = {day: 22, 
+//                        month: 1,
+//                        year:2025,
+//                        time_start:1,
+//                        time_end: 1,
+//                        description: "Tadläkare"};
 
-const event2: Event = {day: 5, 
-                       month: 1,
-                       year:2025,
-                       time_start:1,
-                       time_end: 1,
-                       description: "Tadläkare"};
-const month1: Month= {year: 2025, 
-                    month: 1, 
-                    month_length: 31, 
-                    first_weekday:  3,
-                    week_numbers: [1, 2, 3, 4, 5], 
-                    events_index: 0};
+// const event2: Event = {day: 5, 
+//                        month: 1,
+//                        year:2025,
+//                        time_start:1,
+//                        time_end: 1,
+//                        description: "Tadläkare"};
+// const month1: Month= {year: 2025, 
+//                     month: 1, 
+//                     month_length: 31, 
+//                     first_weekday:  3,
+//                     week_numbers: [1, 2, 3, 4, 5], 
+//                     events_index: 0};
 
-const Eent_array1: Event_list = {base_year:2025, base_month:1, events: [[event1, event2]]};
+// const Eent_array1: Event_list = {base_year:2025, base_month:1, events: [[event1, event2]]};
 
 //display_month(month1, Eent_array1);
 
@@ -208,8 +208,10 @@ function prompt_for_time(prompt_text: string, min_time: number = 0): number {
 }
 //TODO: Maybe add so that you can ad events that are earlier than the days date
 /**
- * 
- * @param event_list 
+ * Lets the user add an event to the event_list by presenting them with prompts
+ * for year, month, day, start time, end time. 
+ * @param {Event_list} event_list - The Event list to which the user's event 
+ * should be added. 
  */ 
 export function user_add_event(event_list: Event_list): void {
     const pt = require('prompt-sync')();
@@ -228,6 +230,8 @@ export function user_add_event(event_list: Event_list): void {
     for (let i = start_month; i < NAMES_MONTHS.length; i++) {
         month_choices.push([`${i}`, NAMES_MONTHS[i]]);
     }
+
+    //Get valid month
     console.log("Please pick a month: ");
     const month = Number(User_input("Month: ", month_choices));
 
@@ -250,9 +254,9 @@ export function user_add_event(event_list: Event_list): void {
     const description = pt("Description: ");
 
     // Create the new event.
-    const newEvent = make_event(date, month, year, time_start, time_end, description);
+    const new_event = make_event(date, month, year, time_start, time_end, description);
 
-    console.log("Event added:", newEvent);
+    event_to_event_list(new_event, event_list);
 }
 
 
@@ -261,4 +265,4 @@ export function user_change_event(event_list: Event_list): void{
 
 }
 
-user_add_event(Eent_array1);
+//user_add_event(Eent_array1);
