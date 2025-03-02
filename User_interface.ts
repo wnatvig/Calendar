@@ -263,8 +263,32 @@ export function user_add_event(event_list: Event_list): void {
 }
 
 export function display_event(event: Event):void{
+    let start_minute: number | string = event.time_start % 100;
+    let start_hour: number | string = (event.time_start - start_minute)/ 100;
+    if (start_minute < 10){
+        start_minute = `0${start_minute}`
+    } else {}
+    
+    if (start_hour < 10){
+        start_hour = `0${start_hour}`
+    } else {}
+    
+    let end_minute: number | string = event.time_end % 100;
+    let end_hour: number | string = (event.time_end - end_minute) / 100;
+    if (end_minute < 10){
+        end_minute = `0${end_minute}`
+    } else {}
 
+    if (end_hour < 10){
+        end_hour = `0${end_hour}`
+    } else {}
+    console.log(`Date: ${NAMES_MONTHS[event.month]} ${event.day}, ${event.year}`);
+    console.log(`From: ${start_hour}:${start_minute}`);
+    console.log(`To: ${end_hour}: ${end_minute}`);
+    console.log(`Desciption: ${event.description}`);
 }
+
+//display_event(event1);
 
 // export function user_change_event(event_list: Event_list): void{
 
