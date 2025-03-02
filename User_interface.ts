@@ -2,6 +2,7 @@ import { MONTH_LENGTHS, NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
 import { Month, Event_list, Event} from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
 import { event_to_event_list, make_event } from "./eventcreate";
+import { init_month } from "./month";
 
 
 //Makes an array with all the dates in the right place so it can be divided
@@ -48,7 +49,11 @@ export function display_month(month: Month, Event_list: Event_list): void{
     console.log("          ",NAMES_MONTHS[month.month] ,month.year);
     console.log("   Mon Tue Wed Thu Fri Sat Sun")
     for (let weeks of month.week_numbers) {
-        process.stdout.write(`\x1b[31m${weeks}\x1b[0m`);
+        if (weeks < 10) {
+            process.stdout.write(` \x1b[31m${weeks}\x1b[0m`);
+        } else{
+            process.stdout.write(`\x1b[31m${weeks}\x1b[0m`);
+        }
         for(let i = week_end_index - 7; i < week_end_index; i++) {
             if (day_array[i] !== undefined){
                 if(event_days.includes(day_array[i])){
@@ -99,7 +104,7 @@ export function display_month(month: Month, Event_list: Event_list): void{
 
 // const Eent_array1: Event_list = {base_year:2025, base_month:1, events: [[event1, event2]]};
 
-//display_month(month1, Eent_array1);
+// display_month(init_month(Eent_array1), Eent_array1);
 
 
 export type Choices = Array<[string, string]>;
