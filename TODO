@@ -17,7 +17,7 @@
    - Function to remove events
    - Function to display a day?
    - Function to be able to travel to a specific month
-   - Check if given date for event is valid (for example time as 3200 or 1261 or -2, or date as 41 april)
+   - Check if given date for event is valid/invalid (for example time as 3200 or 1261 or -2, or date as 41 april)
 
 
 convert all tabs to spaces or spaces to tabs
