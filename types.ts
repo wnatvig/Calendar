@@ -21,3 +21,20 @@ export type Event_list = {					//ex.
 	base_month: number,				//2
 	events: Array<Array<Event>>;
 };
+
+
+// lst = ht.table[ht.hash(str) % ht.table_size]
+// p = head(lst)	//first pair/user (list of collisions)
+// head(p) == username
+// tail(p) == number/index in Array<User> for user
+export type Hashtable = {
+	table: Array<List<Pair<string, number>>>,
+	table_size: number,
+	hash: (key: string) => number,
+};
+
+export type User = {
+	username: string,
+	eventlist: Event_list,
+}
+// users: Array<User> = []
