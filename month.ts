@@ -54,7 +54,7 @@ export function init_month(eventlist: Event_list, year_arg?: number, month_arg?:
 	return month;
 }
 
-function load_weeks(year: number, target_month: number, first_weekday: number, week_numbers: Array<number>): void {
+export function load_weeks(year: number, target_month: number, first_weekday: number, week_numbers: Array<number>): void {
 
 	let month = target_month;
 	let day = first_weekday;
@@ -259,7 +259,7 @@ export function get_month_index(base_year: number, base_month: number,
 
 
 // get length of month (in days)
-function month_length(year: number, month: number): number {
+export function month_length(year: number, month: number): number {
 	if (month != 2)
 		return MONTH_LENGTHS[month];
 
@@ -270,7 +270,7 @@ function month_length(year: number, month: number): number {
 }
 
 //returns true if given year is a leap year, otherwise false
-function leap_year(year: number): boolean {
+export function leap_year(year: number): boolean {
 	if (year % 4 === 0) {
 		if (year % 100 === 0) {
 			if (year % 400 === 0) {
