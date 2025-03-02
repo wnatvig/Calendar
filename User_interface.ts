@@ -10,7 +10,7 @@ function divide_days_in_weeks(month:Month): Array<number>{
     let days_array:Array<number> = new Array(month.week_numbers.length * 7);
     for( let i = 1; i <= month.week_numbers.length * 7; i++){
         if ( i <= month.month_length) {
-            days_array[i + month.first_weekday - 1] = i;
+            days_array[i + month.first_weekday - 2] = i;
         } else {}
     };
     return days_array;
@@ -225,25 +225,27 @@ export function user_add_event(event_list: Event_list): void {
         return num < current_year ? "Invalid entry: Too early year" : null;
     });
 
-    // Build month choices based on the selected year.
-    let month_choices: Array<[string, string]> = [];
-    const start_month = year === current_year ? current_month : 1;
-    for (let i = start_month; i < NAMES_MONTHS.length; i++) {
-        month_choices.push([`${i}`, NAMES_MONTHS[i]]);
-    }
+
 
     //Get valid month
-    console.log("Please pick a month: ");
-    const month = Number(User_input("Month: ", month_choices));
+    const month = prompt_for_number("Month: ", (num: number) => {
+        const start_month = year === current_year ? current_month : 1;
+        if (num < start_month){
+            return `Invalid entry: Month already passed`;
+        } else if (num > 12){
+            return `Invalid entry: There are only 12 months in the year`;
+        } else {}
+        return null;
+    });
 
     // Get valid date (must be within the month's range and not in the past if current month/year)
     const date = prompt_for_number("Date: ", (num: number) => {
         if (num < 1 || num > MONTH_LENGTHS[month]) {
             return `Invalid date: ${NAMES_MONTHS[month]} only has ${MONTH_LENGTHS[month]} days`;
-        }
+        } else {}
         if (year === current_year && month === current_month && num < current_date) {
             return "Invalid entry: Date already passed";
-        }
+        } else {}
         return null;
     });
 
@@ -260,7 +262,9 @@ export function user_add_event(event_list: Event_list): void {
     event_to_event_list(new_event, event_list);
 }
 
+export function display_event(event: Event):void{
 
+}
 
 // export function user_change_event(event_list: Event_list): void{
 
