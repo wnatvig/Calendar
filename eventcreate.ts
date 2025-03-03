@@ -1,5 +1,4 @@
-import {
-    Month, Event, Event_list
+import { Month, Event, Event_list
 } from './types';
 import { get_month_index } from './month'
 
@@ -24,7 +23,8 @@ export function make_event_list(base_year: number,
 
 }
 
-export function event_to_event_list(event: Event, event_list: Event_list): Event_list{
+//TODO is return necessary?
+export function add_event_to_event_list(event: Event, event_list: Event_list): void {
 	//TODO THIS month_index CAN BE NEGATIVE, CHECK NECESSARY SOMEWHERE
     const month_index = get_month_index(event_list.base_year, event_list.base_month, 
                                         event.year, event.month);
@@ -33,5 +33,4 @@ export function event_to_event_list(event: Event, event_list: Event_list): Event
         event_list.events[month_index] = []; //sätter en array där det inte finns ngt
     }
     event_list.events[month_index].push(event); //appendar eventet till rätt ställe
-    return event_list;
 }
