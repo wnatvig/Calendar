@@ -1,4 +1,4 @@
-import { make_event, make_event_list, event_to_event_list } from "./eventcreate";
+import { make_event, make_event_list, add_event_to_event_list } from "./eventcreate";
 import { Event, Event_list } from "./types";
 
 describe("Event Functions", () => {
@@ -26,11 +26,11 @@ describe("Event Functions", () => {
         });
     });
 
-    test("event_to_event_list:", () => {
+    test("add_event_to_event_list:", () => {
         let event_list: Event_list = make_event_list(2025, 1, []);
         const event: Event = make_event(4, 9, 2025, 2400, 2359, "Birthday");
 
-        event_list = event_to_event_list(event, event_list);
+        add_event_to_event_list(event, event_list);
 
         const month_index = 8; // september är nionde (index 8 när jan = index 0)
         expect(event_list.events.length).toBeGreaterThan(month_index);
