@@ -47,6 +47,8 @@ export function init_hashtable(): Hashtable {
 //    update user Event_list with new event
 //
 // if no event is given (optional parameter) user will be created but with an empty eventlist (current date as base)
+//
+// DOES NOT WRITE TO FILE
 export function add_event(ht: Hashtable, users: Array<User>, username: string, event?: Event): void {
 	let ht_i = ht.hash(username) % ht.table_size;
 	let user_list: List<Pair<string, number>>;
@@ -109,3 +111,20 @@ export function add_event(ht: Hashtable, users: Array<User>, username: string, e
 //
 //	return false;
 //}
+
+//TODO move somewhere else?
+export function get_event_list(ht: Hashtable, users: Array<User>, user: string): Event_list {
+	let lst = ht.table[ht.hash(user) % ht.table_size]
+	let user_index = -1;
+	for (; !is_null(lst); lst = tail(lst)) {
+		if (head(head(lst)) === user) {
+			user_index = tail(head(lst)); 
+			break;
+		}
+	}
+	if (user_index === -1) {
+		console.log("ERCHUOTNHURCHOUCRHCR");
+	}
+
+	return users[user_index].eventlist;
+}
