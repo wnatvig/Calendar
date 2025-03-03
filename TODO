@@ -11,13 +11,14 @@
 3. Print month to terminal (Month and Event list)
    
    
-   - Function to fetch an event from event_list
-   - Function to display an event
-   - Function to alter events
-   - Function to remove events
-   - Function to display a day?
+   - Functions to fetch an event from event_list
+      -Eg. comming events
+      -Let user input an event they want to see
+   - Function to alter events //W
+   - Function to remove events //W
+   - Function to display a day //D
    - Function to be able to travel to a specific month
-   - Check if given date for event is valid/invalid (for example time as 3200 or 1261 or -2, or date as 41 april)
+   - 
 
 
 convert all tabs to spaces or spaces to tabs

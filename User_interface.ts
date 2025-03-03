@@ -58,7 +58,7 @@ export function display_month(month: Month, Event_list: Event_list): void{
             if (day_array[i] !== undefined){
                 if(event_days.includes(day_array[i])){
                     if (day_array[i] < 10) {
-                        process.stdout.write('   ' + `\x1b[34m${day_array[i]}\x1b[0m`);
+                        process.stdout.write('   ' + `§${day_array[i]}\x1b[0m`);
                     } else{
                         process.stdout.write('  ' + `\x1b[34m${day_array[i]}\x1b[0m`);
                 }
@@ -217,9 +217,10 @@ function prompt_for_time(prompt_text: string, min_time: number = 0): number {
  * Lets the user add an event to the event_list by presenting them with prompts
  * for year, month, day, start time, end time. 
  * @param {Event_list} event_list - The Event list to which the user's event 
- * should be added. 
+ * should be added.
+ * //TODO 
  */ 
-export function user_add_event(event_list: Event_list): void {
+export function user_add_event(event_list: Event_list): Event {
     const pt = require('prompt-sync')();
     const current_year = get_current_year();
     const current_month = get_current_month();
@@ -259,12 +260,13 @@ export function user_add_event(event_list: Event_list): void {
     const time_end = prompt_for_time("End time: ", time_start);
 
     // Get event description.
+    //TODO: Add so user cannot use \
     const description = pt("Description: ");
 
     // Create the new event.
     const new_event = make_event(date, month, year, time_start, time_end, description);
 
-    add_event_to_event_list(new_event, event_list);
+    return new_event;
 }
 
 export function display_event(event: Event):void{

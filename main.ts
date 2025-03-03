@@ -22,17 +22,18 @@ let event: Event = {
 add_event(ht, users, "user", event);
 
 let start:boolean = true;
-
+let eventlist: Event_list = get_event_list(ht, users, "user");
+let month: Month = init_month(eventlist);
 while (start){
-	let eventlist: Event_list = get_event_list(ht, users, "user");
-	let month: Month = init_month(eventlist);
+
 
     display_month(month, eventlist);
 
     const actions_list: Choices = [["next", "Displays the next month"],
                                    ["prev", "Display the previous month"],
                                    ["add", "Add an event to the calendar"],
-                                   ["quit", "End the program"]];
+                                   ["quit", "End the program"],
+                                   ["edit"]];
     
     //Need function to view events
     //Need fuction to fetch specific events (such as next events)
