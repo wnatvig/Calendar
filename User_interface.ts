@@ -1,7 +1,7 @@
 import { MONTH_LENGTHS, NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
 import { Month, Event_list, Event} from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
-import { event_to_event_list, make_event } from "./eventcreate";
+import { add_event_to_event_list, make_event } from "./eventcreate";
 import { init_month } from "./month";
 
 
@@ -264,7 +264,7 @@ export function user_add_event(event_list: Event_list): void {
     // Create the new event.
     const new_event = make_event(date, month, year, time_start, time_end, description);
 
-    event_to_event_list(new_event, event_list);
+    add_event_to_event_list(new_event, event_list);
 }
 
 export function display_event(event: Event):void{
