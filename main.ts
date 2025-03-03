@@ -32,8 +32,8 @@ while (start){
     const actions_list: Choices = [["next", "Displays the next month"],
                                    ["prev", "Display the previous month"],
                                    ["add", "Add an event to the calendar"],
-                                   ["quit", "End the program"],
-                                   ["edit"]];
+                                   ["edit", "Edit and event"],
+                                   ["quit", "End the program"]];
     
     //Need function to view events
     //Need fuction to fetch specific events (such as next events)
