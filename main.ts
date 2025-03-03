@@ -25,8 +25,6 @@ let start:boolean = true;
 let eventlist: Event_list = get_event_list(ht, users, "user");
 let month: Month = init_month(eventlist);
 while (start){
-
-
     display_month(month, eventlist);
 
     const actions_list: Choices = [["next", "Displays the next month"],
@@ -47,7 +45,8 @@ while (start){
     } else if(action === "prev") {
         month = get_previous_month(month, eventlist);
     } else if (action === "add") {
-        user_add_event(eventlist);
+        event = user_add_event(eventlist);
+		add_event(ht, users, "user", event);
     } else if (action === "quit") {
         break;
     }
