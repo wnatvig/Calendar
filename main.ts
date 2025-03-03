@@ -11,7 +11,15 @@ import { get_event_list } from './hashtable';
 //let month: Month = init_month(eventlist);
 let ht: Hashtable = init_hashtable();
 let users: Array<User> = [];
-add_event(ht, users, "user");
+let event: Event = {
+	day: 3,
+	month: 3,
+	year: 2025,
+	time_start: 1630,
+	time_end: 1700,
+	description: "discordmöte",
+};
+add_event(ht, users, "user", event);
 
 let start:boolean = true;
 
