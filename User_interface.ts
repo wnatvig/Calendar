@@ -58,7 +58,7 @@ export function display_month(month: Month, Event_list: Event_list): void{
             if (day_array[i] !== undefined){
                 if(event_days.includes(day_array[i])){
                     if (day_array[i] < 10) {
-                        process.stdout.write('   ' + `§${day_array[i]}\x1b[0m`);
+                        process.stdout.write('   ' + `\x1b[34m${day_array[i]}\x1b[0m`);
                     } else{
                         process.stdout.write('  ' + `\x1b[34m${day_array[i]}\x1b[0m`);
                 }
