@@ -55,7 +55,7 @@ describe("display_month", () => {
         };
         const Event_list = { base_year: 2025, base_month:2, events: [[]] };
 
-        display_month(month, Event_list);
+        display_month(month, Event_list, 1);
         
         expect(consoleSpy).toHaveBeenCalledWith("          ", "February", 2025);
         expect(consoleSpy).toHaveBeenCalledWith("   Mon Tue Wed Thu Fri Sat Sun");
@@ -83,7 +83,7 @@ describe("display_month", () => {
                     events_index: 0};
 
         const Event_array1: Event_list = {base_year:2025, base_month:1, events: [[event1, event2]]};
-        display_month(month1, Event_array1);
+        display_month(month1, Event_array1, 1);
 
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringMatching(/\x1b\[34m5\x1b\[0m/));
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringMatching(/\x1b\[34m22\x1b\[0m/));
