@@ -44,7 +44,9 @@ export function display_month(month: Month, Event_list: Event_list, day: number)
 
     //Create an array with all days with events that month
     let event_days = days_with_events(Event_list.events[month.events_index]);
-    
+
+    //check for if it is the current month
+    let is_current_month = month.month === get_current_month() && month.year === get_current_year();
 
 
     console.log();
@@ -58,14 +60,14 @@ export function display_month(month: Month, Event_list: Event_list, day: number)
         }
         for(let i = week_end_index - 7; i < week_end_index; i++) {
             if (day_array[i] !== undefined){
-                if (day_array[i] === get_current_date() && day_array[i] === day){
+                if (day_array[i] === get_current_date() && day_array[i] === day && is_current_month){
                     //Color background green, with whit text if it is today and viewed day
                     if (day_array[i] < 10) {
                         process.stdout.write('  ' + `\x1b[42;37m ${day_array[i]}\x1b[0m`);
                     } else{
                         process.stdout.write('  ' + `\x1b[42;37m${day_array[i]}\x1b[0m`);
                     }
-                } else if(day_array[i] === get_current_date()){
+                } else if(day_array[i] === get_current_date() && is_current_month){
                     //Color text green if it is todays date
                     if (day_array[i] < 10) {
                         process.stdout.write('  ' + `\x1b[32m ${day_array[i]}\x1b[0m`);
