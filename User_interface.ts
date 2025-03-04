@@ -58,23 +58,40 @@ export function display_month(month: Month, Event_list: Event_list, day: number)
         }
         for(let i = week_end_index - 7; i < week_end_index; i++) {
             if (day_array[i] !== undefined){
-                if(day_array[i] === day && event_days.includes(day_array[i])) {
+                if (day_array[i] === get_current_date() && day_array[i] === day){
+                    //Color background green, with whit text if it is today and viewed day
                     if (day_array[i] < 10) {
-                        process.stdout.write('  ' + `\x1b[48;5;230;38;5;45m ${day_array[i]}\x1b[0m`);
+                        process.stdout.write('  ' + `\x1b[42;37m ${day_array[i]}\x1b[0m`);
                     } else{
-                        process.stdout.write('  ' + `\x1b[48;5;230;38;5;45m${day_array[i]}\x1b[0m`);
+                        process.stdout.write('  ' + `\x1b[42;37m${day_array[i]}\x1b[0m`);
+                    }
+                } else if(day_array[i] === get_current_date()){
+                    //Color text green if it is todays date
+                    if (day_array[i] < 10) {
+                        process.stdout.write('  ' + `\x1b[32m ${day_array[i]}\x1b[0m`);
+                    } else{
+                        process.stdout.write('  ' + `\x1b[32m${day_array[i]}\x1b[0m`);
+                    }
+                } else if(day_array[i] === day && event_days.includes(day_array[i])) { 
+                    //Colors the background blue if it the highlighted day and there is at least one event on it
+                    if (day_array[i] < 10) {
+                        process.stdout.write('  ' + `\x1b[44;37m ${day_array[i]}\x1b[0m`);
+                    } else{
+                        process.stdout.write('  ' + `\x1b[44;37m${day_array[i]}\x1b[0m`);
                     }
                 } else if(day_array[i] === day){
+                    //Colors backgorund white to highlight the day the user is on
                     if (day_array[i] < 10) {
-                        process.stdout.write('  ' + `\x1b[48;5;230;38;5;0m ${day_array[i]}\x1b[0m`);
+                        process.stdout.write('  ' + `\x1b[47;30m ${day_array[i]}\x1b[0m`);
                     } else{
-                        process.stdout.write('  ' + `\x1b[48;5;230;38;5;0m${day_array[i]}\x1b[0m`);
+                        process.stdout.write('  ' + `\x1b[47;30m${day_array[i]}\x1b[0m`);
                     }
                 } else if(event_days.includes(day_array[i])){
+                    //Colors text blue to show that there are events on that day
                     if (day_array[i] < 10) {
-                        process.stdout.write('   ' + `\x1b[38;5;45m${day_array[i]}\x1b[0m`);
+                        process.stdout.write('   ' + `\x1b[34m${day_array[i]}\x1b[0m`);
                     } else{
-                        process.stdout.write('  ' + `\x1b[38;5;45m${day_array[i]}\x1b[0m`);
+                        process.stdout.write('  ' + `\x1b[34m${day_array[i]}\x1b[0m`);
                     }
                 } else {
                     if (day_array[i] < 10) {
