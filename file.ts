@@ -1,8 +1,24 @@
 import * as fs from 'fs';
 import type { Event, Hashtable, User } from './types';
+import { ht_add_event } from './hashtable';
 
 
 const DATA_FILENAME = "data";
+
+
+export function write_events_to_file(users: Array<User>, filename: string): number {
+	//loop through all events
+	//stringify each event
+	//write everything to file
+}
+
+export function append_event_to_file(event: Event, user: string, filename: string): number {
+	//stringify event
+	//append to file
+}
+
+function stringify_event(event: Event, username: string): string {
+}
 
 // read file
 // for each line:
@@ -41,6 +57,10 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 		}
 
 		//TODO create Event (with tokens), william skriver denna
+		//let event = ... ^
+		//let user = token[0]
+
+		ht_add_event(ht, users, user, event);
 	}
 
 	return 0;

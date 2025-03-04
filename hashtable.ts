@@ -103,6 +103,29 @@ export function ht_add_event(ht: Hashtable, users: Array<User>, username: string
 		add_event_to_event_list(event, users[user_i].eventlist);
 }
 
+//return status code?
+export function ht_delete_event(ht: Hashtable, users: Array<User>, username: string, event?: Event): void {
+	let ht_i = ht.hash(username) % ht.table_size;
+	let user_list: List<Pair<string, number>>;
+	let user_i;
+
+	for (user_list = ht.table[ht_i]; !is_null(user_list); user_list = tail(user_list))
+		if (head(head(user_list)) === username)
+			break;
+
+	if (user_list === null)	// user not found
+		return;
+
+	user_i = tail(head(user_list));
+
+	if (event !== undefined) {
+		// TODO write this function
+		delete_event_from_event_list(event, users[user_i].eventlist);
+	} else {
+		// remove user from hashtable and from users, how?
+	}
+}
+
 export function ht_entry_exists(ht: Hashtable, key: string): boolean {
 	let lst: List<Pair<string, number>>;
 	let ht_i = ht.hash(key) % ht.table_size;
