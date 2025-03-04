@@ -289,8 +289,8 @@ export function user_select_event(event_list: Event_list): Event | null {
     });
 
     const date = prompt_for_number("Enter date: ", (num: number) => {
-        if (num < 1 || num > MONTH_LENGTHS[month]) {
-            return `Invalid entry: ${NAMES_MONTHS[month]} only has ${MONTH_LENGTHS[month]} days`;
+        if (num < 1 || num > month_length(year, month)) {
+            return `Invalid entry: ${NAMES_MONTHS[month]} only has ${month_length(year, month)} days`;
         }
         return null;
     });
