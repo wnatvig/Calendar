@@ -1,8 +1,8 @@
-import { MONTH_LENGTHS, NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
+import { NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
 import { Month, Event_list, Event} from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
 import { add_event_to_event_list, make_event } from "./eventcreate";
-import { init_month } from "./month";
+import { init_month, month_length } from "./month";
 
 
 //Makes an array with all the dates in the right place so it can be divided
@@ -246,8 +246,8 @@ export function user_add_event(event_list: Event_list): Event {
 
     // Get valid date (must be within the month's range and not in the past if current month/year)
     const date = prompt_for_number("Date: ", (num: number) => {
-        if (num < 1 || num > MONTH_LENGTHS[month]) {
-            return `Invalid date: ${NAMES_MONTHS[month]} only has ${MONTH_LENGTHS[month]} days`;
+        if (num < 1 || num > month_length(year, month)) {
+            return `Invalid date: ${NAMES_MONTHS[month]} only has ${month_length(year, month)} days`;
         } else {}
         if (year === current_year && month === current_month && num < current_date) {
             return "Invalid entry: Date already passed";
