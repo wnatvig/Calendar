@@ -2,8 +2,8 @@ import type { Month, Event, Event_list, Hashtable, User } from './types';
 import { Choices, display_month, user_add_event, User_input } from './User_interface';
 import { init_month, get_next_month, get_previous_month } from './month';
 import { get_current_year, get_current_month } from './time_date';
-import { init_hashtable, add_event } from './hashtable';
-import { get_event_list } from './hashtable';
+import { init_hashtable } from './hashtable';
+import { ht_add_event, ht_get_event_list } from './hashtable';
 
 
 
@@ -19,19 +19,18 @@ let event: Event = {
 	time_end: 1700,
 	description: "discordmöte",
 };
-add_event(ht, users, "user", event);
+ht_add_event(ht, users, "user", event);
 
 let start:boolean = true;
-
+let eventlist: Event_list = ht_get_event_list(ht, users, "user");
+let month: Month = init_month(eventlist);
 while (start){
-	let eventlist: Event_list = get_event_list(ht, users, "user");
-	let month: Month = init_month(eventlist);
-
     display_month(month, eventlist);
 
     const actions_list: Choices = [["next", "Displays the next month"],
                                    ["prev", "Display the previous month"],
                                    ["add", "Add an event to the calendar"],
+                                   ["edit", "Edit and event"],
                                    ["quit", "End the program"]];
     
     //Need function to view events
@@ -46,7 +45,8 @@ while (start){
     } else if(action === "prev") {
         month = get_previous_month(month, eventlist);
     } else if (action === "add") {
-        user_add_event(eventlist);
+        event = user_add_event(eventlist);
+		ht_add_event(ht, users, "user", event);
     } else if (action === "quit") {
         break;
     }

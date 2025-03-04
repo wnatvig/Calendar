@@ -19,6 +19,21 @@ function simple_hash(str: string): number {
 	return hash;
 }
 
+//todo somewhere else:
+
+//add_event():
+//	ht_add_event()
+//	write to file
+
+//add_user():	//wrapper for ht_add_event, no event -> only add user
+//	ht_add_event(ht, users, user);
+
+//user_exists():
+//	ht_entry_exists()
+
+//something for ht_get_event_list()
+//no ht functions in main
+
 
 // delete event
 // delete user
@@ -49,7 +64,7 @@ export function init_hashtable(): Hashtable {
 // if no event is given (optional parameter) user will be created but with an empty eventlist (current date as base)
 //
 // DOES NOT WRITE TO FILE
-export function add_event(ht: Hashtable, users: Array<User>, username: string, event?: Event): void {
+export function ht_add_event(ht: Hashtable, users: Array<User>, username: string, event?: Event): void {
 	let ht_i = ht.hash(username) % ht.table_size;
 	let user_list: List<Pair<string, number>>;
 	let user_i;
@@ -88,32 +103,21 @@ export function add_event(ht: Hashtable, users: Array<User>, username: string, e
 		add_event_to_event_list(event, users[user_i].eventlist);
 }
 
-//function ht_add_user(ht: Hashtable, username: string, user_index: number): void {
-//	if (ht_entry_exists(ht, username)) {
-//		console.log(`DOUBLE ENTRY USER: ${username} -- SKIPPING`);
-//		console.log("users: Array<User> IS INVALID");
-//	} else {
-//		let ht_i = ht.hash(username) % ht.table_size;
-//		//ht.table[ht_i] = <List<Pair<string, number>>>pair(pair(username, user_index), ht.table[ht_i]);
-//		ht.table[ht_i] = pair(pair(username, user_index), ht.table[ht_i]);
-//	}
-//}
+export function ht_entry_exists(ht: Hashtable, key: string): boolean {
+	let lst: List<Pair<string, number>>;
+	let ht_i = ht.hash(key) % ht.table_size;
 
-//function ht_entry_exists(ht: Hashtable, key: string): boolean {
-//	let lst: List<Pair<string, number>>;
-//	let ht_i = ht.hash(key) % ht.table_size;
-//
-//	for (lst = ht.table[ht_i]; !is_null(lst); lst = tail(lst)) {
-//		if (key === head(head(lst))) {
-//			return true;
-//		}
-//	}
-//
-//	return false;
-//}
+	for (lst = ht.table[ht_i]; !is_null(lst); lst = tail(lst)) {
+		if (key === head(head(lst))) {
+			return true;
+		}
+	}
 
-//TODO move somewhere else?
-export function get_event_list(ht: Hashtable, users: Array<User>, user: string): Event_list {
+	return false;
+}
+
+//TODO fix this function
+export function ht_get_event_list(ht: Hashtable, users: Array<User>, user: string): Event_list {
 	let lst = ht.table[ht.hash(user) % ht.table_size]
 	let user_index = -1;
 	for (; !is_null(lst); lst = tail(lst)) {
