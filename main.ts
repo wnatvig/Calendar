@@ -45,15 +45,15 @@ while (start){
     if (action === "next") {
         month = get_next_month(month, eventlist);
         let current_month = init_month(eventlist);
-        day = month.month === current_month.month && month.year === current_month.year 
-              ? get_current_date()
-              : 1;
+        day = month.month === current_month.month && month.year === current_month.year
+             ? get_current_date()
+             :1;
     } else if(action === "prev") {
         month = get_previous_month(month, eventlist);
         let current_month = init_month(eventlist);
-        day = month.month === current_month.month && month.year === current_month.year 
-              ? get_current_date()
-              : 1;
+        day = month.month === current_month.month && month.year === current_month.year
+            ? get_current_date()
+            :1;
     } else if (action === "add") {
         event = user_add_event();
 		ht_add_event(ht, users, "user", event);
