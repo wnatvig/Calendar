@@ -269,6 +269,11 @@ export function user_add_event(event_list: Event_list): Event {
     return new_event;
 }
 
+/**
+ * The function gives the user the possibility to select a specific event
+ * @param event_list an array of events
+ * @returns the event that the user selected as the type Event
+ */
 export function user_select_event(event_list: Event_list): Event | null {
     const pt = require('prompt-sync')();
     
