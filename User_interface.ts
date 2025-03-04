@@ -267,6 +267,54 @@ export function user_add_event(event_list: Event_list): void {
     add_event_to_event_list(new_event, event_list);
 }
 
+export function user_select_event(event_list: Event_list): Event | null {
+    const pt = require('prompt-sync')();
+    
+    const year = prompt_for_number("Enter year: ", (num: number) => {
+        return num < event_list.base_year ? "Invalid entry: Too early year" : null;
+    });
+
+    const month = prompt_for_number("Enter month: ", (num: number) => {
+        if (num < 1 || num > 12) {
+            return "Invalid entry: Month must be between 1 and 12";
+        }
+        return null;
+    });
+
+    const date = prompt_for_number("Enter date: ", (num: number) => {
+        if (num < 1 || num > MONTH_LENGTHS[month]) {
+            return `Invalid entry: ${NAMES_MONTHS[month]} only has ${MONTH_LENGTHS[month]} days`;
+        }
+        return null;
+    });
+
+    const events_on_date = event_list.events[month].filter(event => event.year === year && event.day === date);
+
+    if (events_on_date.length === 0) {
+        console.log("No events found on this date.");
+        return null;
+    }
+
+    if (events_on_date.length === 1) {
+        return events_on_date[0];
+    }
+
+    console.log("Events on this date:");
+    events_on_date.forEach((event, index) => {
+        console.log(`${index + 1}: ${event.description} (${event.time_start} - ${event.time_end})`);
+    });
+
+    const event_index = prompt_for_number("Select an event number: ", (num: number) => {
+        if (num < 1 || num > events_on_date.length) {
+            return "Invalid entry: Please choose a valid event number.";
+        }
+        return null;
+    });
+
+    return events_on_date[event_index - 1];
+}
+
+
 export function display_event(event: Event):void{
     let start_minute: number | string = event.time_start % 100;
     let start_hour: number | string = (event.time_start - start_minute)/ 100;
