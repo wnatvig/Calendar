@@ -385,7 +385,7 @@ export function display_event(event: Event):void{
     } else {}
     console.log(`Date: ${NAMES_MONTHS[event.month]} ${event.day}, ${event.year}`);
     console.log(`From: ${start_hour}:${start_minute}`);
-    console.log(`To: ${end_hour}: ${end_minute}`);
+    console.log(`To: ${end_hour}:${end_minute}`);
     console.log(`Desciption: ${event.description}`);
 }
 
