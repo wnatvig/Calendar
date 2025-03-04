@@ -261,7 +261,11 @@ export function user_add_event(event_list: Event_list): Event {
 
     // Get event description.
     //TODO: Add so user cannot use \
-    const description = pt("Description: ");
+    let description: string = pt("Description: ");
+    while (description.includes("\\")) {
+        console.log("Invalid entry: Cannot use \\ in description")
+        description = pt("Description: ")
+    }
 
     // Create the new event.
     const new_event = make_event(date, month, year, time_start, time_end, description);
