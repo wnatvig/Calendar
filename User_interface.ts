@@ -116,8 +116,8 @@ export function display_day(event_list: Event_list, month: Month, day: number):v
  */
 export function user_pick_day(month:Month): number{
     const date = prompt_for_number("What day do you want to view? ", (num: number) => {
-        if (num < 1 || num > MONTH_LENGTHS[month.month]) {
-            return `Invalid date: ${NAMES_MONTHS[month.month]} only has ${MONTH_LENGTHS[month.month]} days`;
+        if (num < 1 || num > month.month_length) {
+            return `Invalid date: ${NAMES_MONTHS[month.month]} only has ${month.month_length} days`;
         } else {}
         return null;
     });
