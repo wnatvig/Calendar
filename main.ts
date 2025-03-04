@@ -1,5 +1,5 @@
 import type { Month, Event, Event_list, Hashtable, User } from './types';
-import { Choices, display_day, display_month, user_add_event, User_input } from './User_interface';
+import { Choices, display_day, display_month, user_add_event, User_input, user_pick_day } from './User_interface';
 import { init_month, get_next_month, get_previous_month } from './month';
 import { get_current_year, get_current_month, get_current_date } from './time_date';
 import { init_hashtable } from './hashtable';
@@ -59,6 +59,8 @@ while (start){
 		ht_add_event(ht, users, "user", event);
     } else if (action === "quit") {
         break;
+    } else if (action === "view") {
+        day = user_pick_day(month);
     }
 };
 
