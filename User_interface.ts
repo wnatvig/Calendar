@@ -58,24 +58,47 @@ export function display_month(month: Month, Event_list: Event_list, day: number)
         }
         for(let i = week_end_index - 7; i < week_end_index; i++) {
             if (day_array[i] !== undefined){
-                if(day_array[i] === day){
+                if (day_array[i] === get_current_date() && day_array[i] === day){
+                    //Color background green, with whit text if it is today and viewed day
                     if (day_array[i] < 10) {
-                        process.stdout.write('  ' + `\x1b[43m ${day_array[i]}\x1b[0m`);
+                        process.stdout.write('  ' + `\x1b[42;37m ${day_array[i]}\x1b[0m`);
                     } else{
-                        process.stdout.write('  ' + `\x1b[43m${day_array[i]}\x1b[0m`);
-                }
+                        process.stdout.write('  ' + `\x1b[42;37m${day_array[i]}\x1b[0m`);
+                    }
+                } else if(day_array[i] === get_current_date()){
+                    //Color text green if it is todays date
+                    if (day_array[i] < 10) {
+                        process.stdout.write('  ' + `\x1b[32m ${day_array[i]}\x1b[0m`);
+                    } else{
+                        process.stdout.write('  ' + `\x1b[32m${day_array[i]}\x1b[0m`);
+                    }
+                } else if(day_array[i] === day && event_days.includes(day_array[i])) { 
+                    //Colors the background blue if it the highlighted day and there is at least one event on it
+                    if (day_array[i] < 10) {
+                        process.stdout.write('  ' + `\x1b[44;37m ${day_array[i]}\x1b[0m`);
+                    } else{
+                        process.stdout.write('  ' + `\x1b[44;37m${day_array[i]}\x1b[0m`);
+                    }
+                } else if(day_array[i] === day){
+                    //Colors backgorund white to highlight the day the user is on
+                    if (day_array[i] < 10) {
+                        process.stdout.write('  ' + `\x1b[47;30m ${day_array[i]}\x1b[0m`);
+                    } else{
+                        process.stdout.write('  ' + `\x1b[47;30m${day_array[i]}\x1b[0m`);
+                    }
                 } else if(event_days.includes(day_array[i])){
+                    //Colors text blue to show that there are events on that day
                     if (day_array[i] < 10) {
                         process.stdout.write('   ' + `\x1b[34m${day_array[i]}\x1b[0m`);
                     } else{
                         process.stdout.write('  ' + `\x1b[34m${day_array[i]}\x1b[0m`);
-                }
+                    }
                 } else {
                     if (day_array[i] < 10) {
                         process.stdout.write('   ' + day_array[i]);
                     } else{
                         process.stdout.write('  ' + day_array[i]);
-                }
+                    }
                 };
             } else {
                 process.stdout.write('    ');
@@ -97,15 +120,19 @@ export function display_month(month: Month, Event_list: Event_list, day: number)
  * @precondition day is a positive whole number less than or equal to month.month_lenght
  */
 export function display_day(event_list: Event_list, month: Month, day: number):void{
-    let days_events = event_list.events[month.events_index].filter(events => events.day === day);
+    let days_events: Array<Event> = []
+    if (event_list.events[month.events_index] !== undefined){
+        days_events = event_list.events[month.events_index].filter(events => events.day === day);
+    }
     console.log(`All events for ${NAMES_MONTHS[month.month]} ${day}:`);
     console.log();
-    for (let ev of days_events){
-        display_event(ev);
-        console.log();
-    }
     if (days_events.length === 0){
         console.log("Seems you have no events this day");
+    } else {
+        for (let ev of days_events){
+            display_event(ev);
+            console.log();
+        }
     }
 }
 
