@@ -388,10 +388,6 @@ export function user_select_event(event_list: Event_list): Event | null {
     return events_on_date[event_index - 1];
 }
 
-/**
- * Displays an event in a formated way in the terminal.
- * @param {Event} event - The event that is to be displayed 
- */
 export function parse_event_input(
     dayStr: string,
     monthStr: string,
@@ -443,6 +439,10 @@ function parse_time(timeStr: string): number | null {
     return hours * 100 + minutes; //ex 15*100+15=1515
 }
 
+/**
+ * Displays an event in a formated way in the terminal.
+ * @param {Event} event - The event that is to be displayed 
+ */
 export function display_event(event: Event):void{
     let start_minute: number | string = event.time_start % 100;
     let start_hour: number | string = (event.time_start - start_minute)/ 100;
