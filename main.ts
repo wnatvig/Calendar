@@ -2,27 +2,19 @@ import type { Month, Event, Event_list, Hashtable, User } from './types';
 import { Choices, display_day, display_month, user_add_event, User_input, user_pick_day } from './User_interface';
 import { init_month, get_next_month, get_previous_month } from './month';
 import { get_current_year, get_current_month, get_current_date } from './time_date';
-import { init_hashtable } from './hashtable';
-import { ht_add_event, ht_get_event_list } from './hashtable';
+import { init_hashtable, ht_add_event, ht_entry_exists, ht_get_event_list } from './hashtable';
+import { append_event_to_file, add_events_from_file } from './file';
 
+const DATA_FILENAME = "data";
 
-//let eventlist: Event_list = { base_year: get_current_year(), base_month: get_current_month(), events: []};
-//let month: Month = init_month(eventlist);
 let ht: Hashtable = init_hashtable();
 let users: Array<User> = [];
-let event: Event = {
-	day: 3,
-	month: 3,
-	year: 2025,
-	time_start: 1630,
-	time_end: 1700,
-	description: "discordmöte",
-};
-ht_add_event(ht, users, "user", event);
+add_user(ht, users, "user");
+add_events_from_file(ht, users, DATA_FILENAME);
 
 let day = get_current_date();
 let start:boolean = true;
-let eventlist: Event_list = ht_get_event_list(ht, users, "user");
+let eventlist: Event_list = get_event_list(ht, users, "user");
 let month: Month = init_month(eventlist);
 
 while (start){
@@ -55,8 +47,8 @@ while (start){
             ? get_current_date()
             :1;
     } else if (action === "add") {
-        event = user_add_event();
-		ht_add_event(ht, users, "user", event);
+        let event = user_add_event();
+		add_event(ht, users, "user", event);
     } else if (action === "quit") {
         break;
     } else if (action === "view") {
@@ -64,3 +56,21 @@ while (start){
     }
 };
 
+
+
+function add_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
+	ht_add_event(ht, users, username, event);
+	append_event_to_file(event, username, DATA_FILENAME);//TODO error
+}
+
+function add_user(ht: Hashtable, users: Array<User>, username: string): void {
+	ht_add_event(ht, users, username);
+}
+
+function user_exists(ht: Hashtable, username: string): boolean {
+	return ht_entry_exists(ht, username);
+}
+
+function get_event_list(ht: Hashtable, users: Array<User>, username: string): Event_list {
+	return ht_get_event_list(ht, users, username);
+}

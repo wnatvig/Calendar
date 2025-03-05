@@ -1,9 +1,7 @@
 import * as fs from 'fs';
 import type { Event, Hashtable, User } from './types';
 import { ht_add_event } from './hashtable';
-
-
-const DATA_FILENAME = "data";
+import { parse_event_input } from './User_interface';
 
 
 //export function write_events_to_file(users: Array<User>, filename: string): number {
@@ -13,7 +11,7 @@ const DATA_FILENAME = "data";
 //}
 
 export function append_event_to_file(event: Event, user: string, filename: string): number {
-	let line: string = stringify_event(event, user);
+	let line: string = '\n' + stringify_event(event, user);
 
 	try {
 		fs.appendFileSync(filename, line);
@@ -69,11 +67,22 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 			return 2;
 		}
 
-		//TODO create Event (with tokens), william skriver denna
-		//let event = ... ^
-		//let user = token[0]
+		let parsed_event: [Event | null, number] = parse_event_input(
+			tokens[3],	//day
+			tokens[2],	//month
+			tokens[1],	//year
+			tokens[4],	//start time
+			tokens[5],	//end time
+			tokens[6],	//desc
+		);
 
-		//ht_add_event(ht, users, user, event);
+		if (parsed_event[0] !== null && parsed_event[1] === 0) {
+			ht_add_event(ht, users, tokens[0], parsed_event[0]);
+		} else {
+			console.log("parse_event_input says invalid, somewhere");	//TODO better error
+			console.log(parsed_event);
+			return 2;
+		}
 	}
 
 	return 0;

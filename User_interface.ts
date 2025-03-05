@@ -405,9 +405,12 @@ export function parse_event_input(
     const endTime = parse_time(endTimeStr);
 
     //datum
-    if (isNaN(year) || year < get_current_year()) return [null, 1]; // år
-    if (isNaN(month) || month < get_current_month() || month > 12) return [null, 2]; // månad
-    if (isNaN(day) || day < get_current_date() || day > month_length(year, month)) return [null, 3]; // dag
+    //if (isNaN(year) || year < get_current_year()) return [null, 1]; // år
+    //if (isNaN(month) || month < get_current_month() || month > 12) return [null, 2]; // månad
+    //if (isNaN(day) || day < get_current_day() || day > month_length(year, month)) return [null, 3]; // dag
+    if (isNaN(year)) return [null, 1]; // år
+    if (isNaN(month) || month < 1 || month > 12) return [null, 2]; // månad
+    if (isNaN(day) || day < 1 || day > month_length(year, month)) return [null, 3]; // dag
 
     //tid
     if (startTime === null) return [null, 4]; //starttid

@@ -19,22 +19,6 @@ function simple_hash(str: string): number {
 	return hash;
 }
 
-//todo somewhere else:
-
-//add_event():
-//	ht_add_event()
-//	write to file
-
-//add_user():	//wrapper for ht_add_event, no event -> only add user
-//	ht_add_event(ht, users, user);
-
-//user_exists():
-//	ht_entry_exists()
-
-//something for ht_get_event_list()
-//no ht functions in main
-
-
 // delete event
 // delete user
 
