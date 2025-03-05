@@ -34,15 +34,19 @@ function days_with_events(event_array: Array<Event>): Array<number> {
  * - Week numbers displayed at the beginning of each row.
  * @param {Month} month - the month to be displayed
  * @param {Event_list} Event_list - The events for the calendar
+ * @param {number} day - The date that should be highlighted
+ * @precondition day is a positive whole number less than or equal to month.month_lenght
  */
-export function display_month(month: Month, Event_list: Event_list): void{    
+export function display_month(month: Month, Event_list: Event_list, day: number): void{    
     let day_array = divide_days_in_weeks(month);
     let week_end_index = 7;
     //TODO: Add a function to show days when there are events
 
     //Create an array with all days with events that month
     let event_days = days_with_events(Event_list.events[month.events_index]);
-    
+
+    //check for if it is the current month
+    let is_current_month = month.month === get_current_month() && month.year === get_current_year();
 
 
     console.log();
@@ -56,18 +60,47 @@ export function display_month(month: Month, Event_list: Event_list): void{
         }
         for(let i = week_end_index - 7; i < week_end_index; i++) {
             if (day_array[i] !== undefined){
-                if(event_days.includes(day_array[i])){
+                if (day_array[i] === get_current_date() && day_array[i] === day && is_current_month){
+                    //Color background green, with whit text if it is today and viewed day
+                    if (day_array[i] < 10) {
+                        process.stdout.write('  ' + `\x1b[42;37m ${day_array[i]}\x1b[0m`);
+                    } else{
+                        process.stdout.write('  ' + `\x1b[42;37m${day_array[i]}\x1b[0m`);
+                    }
+                } else if(day_array[i] === get_current_date() && is_current_month){
+                    //Color text green if it is todays date
+                    if (day_array[i] < 10) {
+                        process.stdout.write('  ' + `\x1b[32m ${day_array[i]}\x1b[0m`);
+                    } else{
+                        process.stdout.write('  ' + `\x1b[32m${day_array[i]}\x1b[0m`);
+                    }
+                } else if(day_array[i] === day && event_days.includes(day_array[i])) { 
+                    //Colors the background blue if it the highlighted day and there is at least one event on it
+                    if (day_array[i] < 10) {
+                        process.stdout.write('  ' + `\x1b[44;37m ${day_array[i]}\x1b[0m`);
+                    } else{
+                        process.stdout.write('  ' + `\x1b[44;37m${day_array[i]}\x1b[0m`);
+                    }
+                } else if(day_array[i] === day){
+                    //Colors backgorund white to highlight the day the user is on
+                    if (day_array[i] < 10) {
+                        process.stdout.write('  ' + `\x1b[47;30m ${day_array[i]}\x1b[0m`);
+                    } else{
+                        process.stdout.write('  ' + `\x1b[47;30m${day_array[i]}\x1b[0m`);
+                    }
+                } else if(event_days.includes(day_array[i])){
+                    //Colors text blue to show that there are events on that day
                     if (day_array[i] < 10) {
                         process.stdout.write('   ' + `\x1b[34m${day_array[i]}\x1b[0m`);
                     } else{
                         process.stdout.write('  ' + `\x1b[34m${day_array[i]}\x1b[0m`);
-                }
+                    }
                 } else {
                     if (day_array[i] < 10) {
                         process.stdout.write('   ' + day_array[i]);
                     } else{
                         process.stdout.write('  ' + day_array[i]);
-                }
+                    }
                 };
             } else {
                 process.stdout.write('    ');
@@ -81,6 +114,45 @@ export function display_month(month: Month, Event_list: Event_list): void{
     console.log();
 };
 
+/**
+ * Displays all events for a specific day in the terminal window
+ * @param {Event_list} event_list - The eventlist where all the events are stored
+ * @param {Month} month - The month the day is in 
+ * @param {number} day - The date to be viewed
+ * @precondition day is a positive whole number less than or equal to month.month_lenght
+ */
+export function display_day(event_list: Event_list, month: Month, day: number):void{
+    let days_events: Array<Event> = []
+    if (event_list.events[month.events_index] !== undefined){
+        days_events = event_list.events[month.events_index].filter(events => events.day === day);
+    }
+    console.log(`All events for ${NAMES_MONTHS[month.month]} ${day}:`);
+    console.log();
+    if (days_events.length === 0){
+        console.log("Seems you have no events this day");
+    } else {
+        for (let ev of days_events){
+            display_event(ev);
+            console.log();
+        }
+    }
+}
+
+/**
+ * Lets user pick a date from a month
+ * @param {Month} month - The month from which, the user can pick a date 
+ * @returns a users choice of a valid date from the month in question
+ */
+export function user_pick_day(month:Month): number{
+    const date = prompt_for_number("What day do you want to view? ", (num: number) => {
+        if (num < 1 || num > month.month_length) {
+            return `Invalid date: ${NAMES_MONTHS[month.month]} only has ${month.month_length} days`;
+        } else {}
+        return null;
+    });
+
+    return date;
+}
 
 // const event1: Event = {day: 22, 
 //                        month: 1,
@@ -141,13 +213,6 @@ export function User_input(Prompt: string, choices: Choices):string{
 
 //Test for user_input
 //console.log(User_input("Enter[y/n]: ",[["y", "yes"], ["n", "no"]]));
-
-// /**
-//  * 
-//  */
-// export function switch_month():void{
-//     let current_month = get_current_month();
-//}
 
 
 // Helper: Prompt for a number with validation.
@@ -214,13 +279,11 @@ function prompt_for_time(prompt_text: string, min_time: number = 0): number {
 }
 //TODO: Maybe add so that you can ad events that are earlier than the days date
 /**
- * Lets the user add an event to the event_list by presenting them with prompts
- * for year, month, day, start time, end time. 
- * @param {Event_list} event_list - The Event list to which the user's event 
- * should be added.
- * //TODO 
+ * Lets the user create an event by presenting them with prompts
+ * for year, month, day, start time, end time, and description. 
+ * @returns the user created event
  */ 
-export function user_add_event(event_list: Event_list): Event {
+export function user_add_event(): Event {
     const pt = require('prompt-sync')();
     const current_year = get_current_year();
     const current_month = get_current_month();
@@ -261,7 +324,11 @@ export function user_add_event(event_list: Event_list): Event {
 
     // Get event description.
     //TODO: Add so user cannot use \
-    const description = pt("Description: ");
+    let description: string = pt("Description: ");
+    while (description.includes("\\")) {
+        console.log("Invalid entry: Cannot use \\ in description")
+        description = pt("Description: ")
+    }
 
     // Create the new event.
     const new_event = make_event(date, month, year, time_start, time_end, description);
@@ -321,6 +388,10 @@ export function user_select_event(event_list: Event_list): Event | null {
     return events_on_date[event_index - 1];
 }
 
+/**
+ * Displays an event in a formated way in the terminal.
+ * @param {Event} event - The event that is to be displayed 
+ */
 export function parse_event_input(
     dayStr: string,
     monthStr: string,
@@ -394,7 +465,7 @@ export function display_event(event: Event):void{
     } else {}
     console.log(`Date: ${NAMES_MONTHS[event.month]} ${event.day}, ${event.year}`);
     console.log(`From: ${start_hour}:${start_minute}`);
-    console.log(`To: ${end_hour}: ${end_minute}`);
+    console.log(`To: ${end_hour}:${end_minute}`);
     console.log(`Desciption: ${event.description}`);
 }
 
