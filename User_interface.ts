@@ -321,6 +321,56 @@ export function user_select_event(event_list: Event_list): Event | null {
     return events_on_date[event_index - 1];
 }
 
+export function parse_event_input(
+    dayStr: string,
+    monthStr: string,
+    yearStr: string,
+    startTimeStr: string,
+    endTimeStr: string,
+    description: string
+): [Event | null, number] {
+    
+    // till siffror
+    const day = Number(dayStr);
+    const month = Number(monthStr);
+    const year = Number(yearStr);
+    const startTime = parse_time(startTimeStr);
+    const endTime = parse_time(endTimeStr);
+
+    //datum
+    if (isNaN(year) || year < get_current_year()) return [null, 1]; // år
+    if (isNaN(month) || month < get_current_month() || month > 12) return [null, 2]; // månad
+    if (isNaN(day) || day < get_current_date() || day > month_length(year, month)) return [null, 3]; // dag
+
+    //tid
+    if (startTime === null) return [null, 4]; //starttid
+    if (endTime === null) return [null, 5]; //sluttid
+    if (startTime >= endTime) return [null, 6]; //starttid före sluttid
+
+    const event: Event = {
+        day: day,
+        month: month,
+        year: year,
+        time_start: startTime,
+        time_end: endTime,
+        description: description
+    };
+
+    return [event, 0]; //nummer 0 vilket betyder korrekt
+}
+
+function parse_time(timeStr: string): number | null {
+    const parts = timeStr.split(":");
+    if (parts.length !== 2) return null;
+    
+    const hours = Number(parts[0]);
+    const minutes = Number(parts[1]);
+
+    if (isNaN(hours) || hours < 0 || hours > 23) return null;
+    if (isNaN(minutes) || minutes < 0 || minutes > 59) return null;
+
+    return hours * 100 + minutes; //ex 15*100+15=1515
+}
 
 export function display_event(event: Event):void{
     let start_minute: number | string = event.time_start % 100;
