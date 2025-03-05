@@ -1,8 +1,8 @@
 import { NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
 import { Month, Event_list, Event} from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
-import { add_event_to_event_list, make_event } from "./eventcreate";
-import { init_month, month_length } from "./month";
+import { add_event_to_event_list, make_event, make_event_list } from "./eventcreate";
+import { get_month_index, init_month, month_length } from "./month";
 
 
 //Makes an array with all the dates in the right place so it can be divided
@@ -154,29 +154,31 @@ export function user_pick_day(month:Month): number{
     return date;
 }
 
-// const event1: Event = {day: 22, 
-//                        month: 1,
-//                        year:2025,
-//                        time_start:1,
-//                        time_end: 1,
-//                        description: "Tadläkare"};
+const event1: Event = {day: 22, 
+                       month: 3,
+                       year:2025,
+                       time_start:1,
+                       time_end: 1,
+                       description: "Tadläkare"};
 
-// const event2: Event = {day: 5, 
-//                        month: 1,
-//                        year:2025,
-//                        time_start:1,
-//                        time_end: 1,
-//                        description: "Tadläkare"};
-// const month1: Month= {year: 2025, 
-//                     month: 1, 
-//                     month_length: 31, 
-//                     first_weekday:  3,
-//                     week_numbers: [1, 2, 3, 4, 5], 
-//                     events_index: 0};
+const event2: Event = {day: 5, 
+                       month: 4,
+                       year:2025,
+                       time_start:1,
+                       time_end: 1,
+                       description: "Tadläkare"};
+const month1: Month= {year: 2025, 
+                    month: 1, 
+                    month_length: 31, 
+                    first_weekday:  3,
+                    week_numbers: [1, 2, 3, 4, 5], 
+                    events_index: 0};
 
-// const Eent_array1: Event_list = {base_year:2025, base_month:1, events: [[event1, event2]]};
+const Eent_array1: Event_list = make_event_list(2025, 1, []);
 
-// display_month(init_month(Eent_array1), Eent_array1);
+add_event_to_event_list(event1, Eent_array1);
+add_event_to_event_list(event2, Eent_array1);
+
 
 
 export type Choices = Array<[string, string]>;
@@ -473,9 +475,43 @@ export function display_event(event: Event):void{
 }
 
 //display_event(event1);
+/**
+ * Finds and displays the next upcoming event from the provided event list
+ * If it does not find any event it will print "No upcoming events"
+ * @param {Event_list} event_list - An object containing all events
+ */
+export function next_event(event_list: Event_list): void {
+    let month_index = get_month_index(event_list.base_year,
+                                      event_list.base_month,
+                                      get_current_year(),
+                                      get_current_month());
+    let nextEvent: Event | null = null;
+    let evs = event_list.events;
+    
 
-// export function user_change_event(event_list: Event_list): void{
+    for (let i = month_index; i < evs.length; i++) {
+        for (let ev of evs[i]) {
+            if (i === month_index) {
+                // For the current month, only consider events on or after today
+                if (ev.day >= get_current_date()) {
+                    nextEvent = ev;
+                    break;
+                } else {}
+            } else {
+                // For future months, take the first event
+                nextEvent = ev;
+                break;
+            }
+        }
+        if (nextEvent !== null) break;
+    }
+    
+    if (nextEvent !== null) {
+        display_event(nextEvent);
+    } else {
+        console.log("No upcoming events");
+    }
+}
 
-// }
-
+next_event(Eent_array1);
 //user_add_event(Eent_array1);
