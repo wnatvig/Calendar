@@ -12,10 +12,18 @@ const DATA_FILENAME = "data";
 	//write everything to file
 //}
 
-//export function append_event_to_file(event: Event, user: string, filename: string): number {
-	//stringify event
-	//append to file
-//}
+export function append_event_to_file(event: Event, user: string, filename: string): number {
+	let line: string = stringify_event(event, user);
+
+	try {
+		fs.appendFileSync(filename, line);
+	} catch (error) {
+		console.log(`${error}`);
+		return 1;
+	}
+	
+	return 0;
+}
 
 function stringify_event(event: Event, username: string): string {
 	let time_start_min = `${event.time_start % 100}`.padStart(2, '0');
