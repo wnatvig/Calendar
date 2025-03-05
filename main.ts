@@ -6,7 +6,6 @@ import { init_hashtable } from './hashtable';
 import { ht_add_event, ht_get_event_list } from './hashtable';
 
 
-
 //let eventlist: Event_list = { base_year: get_current_year(), base_month: get_current_month(), events: []};
 //let month: Month = init_month(eventlist);
 let ht: Hashtable = init_hashtable();
@@ -25,6 +24,7 @@ let day = get_current_date();
 let start:boolean = true;
 let eventlist: Event_list = ht_get_event_list(ht, users, "user");
 let month: Month = init_month(eventlist);
+
 while (start){
     display_month(month, eventlist, day);
     display_day(eventlist, month, day);

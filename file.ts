@@ -6,18 +6,23 @@ import { ht_add_event } from './hashtable';
 const DATA_FILENAME = "data";
 
 
-export function write_events_to_file(users: Array<User>, filename: string): number {
+//export function write_events_to_file(users: Array<User>, filename: string): number {
 	//loop through all events
 	//stringify each event
 	//write everything to file
-}
+//}
 
-export function append_event_to_file(event: Event, user: string, filename: string): number {
+//export function append_event_to_file(event: Event, user: string, filename: string): number {
 	//stringify event
 	//append to file
-}
+//}
 
 function stringify_event(event: Event, username: string): string {
+	let time_start_min = `${event.time_start % 100}`.padStart(2, '0');
+	let time_start_h = `${Math.floor((event.time_start - (event.time_start % 100))/100)}`.padStart(2, '0');
+	let time_end_min = `${event.time_end % 100}`.padStart(2, '0');
+	let time_end_h = `${Math.floor((event.time_end - (event.time_end % 100))/100)}`.padStart(2, '0');
+	return `${username}, ${event.year}, ${event.month}, ${event.day}, ${time_start_h}:${time_start_min}, ${time_end_h}:${time_end_min}, \\\"${event.description}\\\"`;
 }
 
 // read file
@@ -60,7 +65,7 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 		//let event = ... ^
 		//let user = token[0]
 
-		ht_add_event(ht, users, user, event);
+		//ht_add_event(ht, users, user, event);
 	}
 
 	return 0;

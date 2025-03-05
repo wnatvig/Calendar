@@ -120,7 +120,7 @@ export function ht_delete_event(ht: Hashtable, users: Array<User>, username: str
 
 	if (event !== undefined) {
 		// TODO write this function
-		delete_event_from_event_list(event, users[user_i].eventlist);
+		//delete_event_from_event_list(event, users[user_i].eventlist);
 	} else {
 		// remove user from hashtable and from users, how?
 		// just set entry to undefined?
