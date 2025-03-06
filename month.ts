@@ -151,7 +151,8 @@ export function get_next_month(prev_month: Month, eventlist: Event_list): Month 
 		month.year++;
 	}
 	month.month_length = month_length(month.year, month.month);
-	month.first_weekday = (((prev_month.first_weekday - 1) + month_length(prev_month.year, prev_month.month)) % 7) + 1;
+	// (prev_month.first_weekday + prev_month.length ) % 7
+	month.first_weekday = (((prev_month.first_weekday - 1) + month_length(prev_month.year, prev_month.month)) % 7) + 1;	//-+1 to make day 0-6 instead of 1-7
 
 
 	date = 0;
@@ -247,7 +248,6 @@ export function get_previous_month(future_month: Month, eventlist: Event_list): 
 	return month;
 }
 
-//TODO error/invalid/illegal input check
 export function get_month_index(base_year: number, base_month: number,
 						 year: number, month: number): number {
 	let year_diff = year - base_year;

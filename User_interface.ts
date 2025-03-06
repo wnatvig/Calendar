@@ -1,7 +1,7 @@
 import { NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
 import { Month, Event_list, Event} from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
-import { add_event_to_event_list, make_event, make_event_list } from "./eventcreate";
+import { add_event_to_event_list, make_event, make_event_list } from "./events";
 import { get_month_index, init_month, month_length } from "./month";
 
 

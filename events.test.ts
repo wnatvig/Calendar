@@ -1,4 +1,4 @@
-import { make_event, make_event_list, add_event_to_event_list } from "./eventcreate";
+import { make_event, make_event_list, add_event_to_event_list } from "./events";
 import { Event, Event_list } from "./types";
 
 describe("Event Functions", () => {

@@ -5,12 +5,9 @@ import { parse_event_input } from './User_interface';
 
 
 export function write_events_to_file(users: Array<User>, filename: string): number {
-	//loop through all events
-	//stringify each event
-	//write everything to file
-	
 	let output: string = "";
 
+	// loop through all events, one user at a time
 	for (let u = 0; u < users.length; u++) {
 		let evl: Event_list = users[u].eventlist;
 		let months: Array<Array<Event>> = evl.events;
@@ -22,15 +19,17 @@ export function write_events_to_file(users: Array<User>, filename: string): numb
 			for (let e = 0; e < months[m].length; e++) {
 				let event = months[m][e]
 	
+				// one line per event
 				output += stringify_event(event, users[u].username) + '\n';
 			}
 		}
 	}
 
+	// write (truncate/create file) output to fil
 	try {
 		fs.writeFileSync(filename, output);
 	} catch (error) {
-		console.log(`${error}`);	//TODO somehow return this error instead?
+		console.log(`${error}`);
 		return 1;
 	}
 
@@ -70,23 +69,23 @@ function stringify_event(event: Event, username: string): string {
 	return `${username}, ${event.year}, ${event.month}, ${event.day}, ${time_start_h}:${time_start_min}, ${time_end_h}:${time_end_min}, \\\"${event.description}\\\"`;
 }
 
-// read file
-// for each line:
-//     get tokens
-//     create event, user
-//     ht_add_event(event)
+//0: success
+//1: error reading data
+//2: error in data
 export function add_events_from_file(ht: Hashtable, users: Array<User>, filename: string): number {
 	let data: string;
 
+	// read file contents to data
 	try {
 		let databuffer = fs.readFileSync(filename, "utf8");
 		data = databuffer.toString();
 	} catch (error) {
-		// TODO if data does not exist -- is it really an error?
-		console.log(`${error}`);	//TODO somehow return this error instead?
+		console.log(`${error}`);
 		return 1;
 	}
 
+
+	let line = 0;
 	let start, end;
 	let lim: [number, number] = [0, 0];
 
@@ -94,16 +93,19 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 		lim = get_line(data, lim);
 		start = lim[0];
 		end = lim[1];
+		line++;
 
-		if (start === end)
+		if (start === end)	// we have reached end of file
 			break;
 
-		// handle line in data from data[start] to data[end]
-		//tokenize(data, start, end);
+
+		// current line consists of characters from data[start] to data[end]
+
+		// split line into tokens
 		let tokens = tokenize(data, start, end);
 
 		if (tokens.length != 7) {
-			console.log("invalid line, somewhere");	//TODO better error message/handling
+			console.log(`invalid data in file '${filename}' at line ${line}:`);
 			return 2;
 		}
 
@@ -119,8 +121,7 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 		if (parsed_event[0] !== null && parsed_event[1] === 0) {
 			ht_add_event(ht, users, tokens[0], parsed_event[0]);
 		} else {
-			console.log("parse_event_input says invalid, somewhere");	//TODO better error
-			console.log(parsed_event);
+			console.log(`invalid data in file '${filename}' at line ${line}: parse_event_input returned ${parsed_event[1]}$`);
 			return 2;
 		}
 	}
@@ -128,20 +129,24 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 	return 0;
 }
 
-//start with get_line(data, 0, 0)
+//first call should be get_line(data, [0, 0])
 //if returned [start, end], start === end, we are done
 function get_line(str: string, a: [number, number]): [number, number] {
 	let start = a[0];
 	let end = a[1];
 
+	// skip whitespace
 	while (end < str.length && whitespace(str[end]))
 		end++;
 
+	// set new start
 	start = end;
 
+	// find end of line
 	while (end < str.length && str[end] !== '\n')
 		end++;
 
+	// return start/end index for line
 	return [start, end];
 }
 
@@ -156,25 +161,26 @@ function tokenize(str: string, start: number, end: number): Array<string> {
 	let t_i = 0;	// write next char at t_i (tokens_array[t][t_i] = str[i])
 
 
-	let inside_quote = false;		// true if inside \" \" - do not ignore whitespace and do not treat delim as delimiter
-	let handle_backslash = false;	// true if last character was \
-	let delim = ',';
+	let inside_quote = false;		// true if inside \" \" (do not ignore whitespace and do not treat delim as delimiter)
+	let handle_backslash = false;	// true if last character was backslash
+	let delim = ',';				// token delimiter
 
+	// loop through current line
 	for (let i = start; i < end; i++) {
 		if (tokens_array[t] === undefined)
 			tokens_array[t] = [];
 		
-		if (handle_backslash) {
+		if (handle_backslash) { // last character was \
 			if (str[i] === '"')
 				inside_quote = !inside_quote;
 			handle_backslash = false;
 			continue;
 		}
 
-		if (!inside_quote && whitespace(str[i]))
+		if (!inside_quote && whitespace(str[i]))	// skip whitespace
 			continue;
 
-		if (!inside_quote && str[i] === delim) {
+		if (!inside_quote && str[i] === delim) {	// delim encountered -> new token
 			t++;
 			t_i = 0;
 			continue;
@@ -185,6 +191,7 @@ function tokenize(str: string, start: number, end: number): Array<string> {
 			continue;
 		}
 	
+		// add char to current token
 		tokens_array[t][t_i] = str[i];
 		t_i++;
 	}

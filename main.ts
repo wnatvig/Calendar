@@ -14,7 +14,7 @@ add_events_from_file(ht, users, DATA_FILENAME);
 
 let day = get_current_date();
 let start:boolean = true;
-let eventlist: Event_list = get_event_list(ht, users, "user");
+let eventlist: Event_list = get_event_list(ht, users, "user")!;
 let month: Month = init_month(eventlist);
 
 
@@ -61,8 +61,9 @@ while (start){
 
 function add_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
 	ht_add_event(ht, users, username, event);
-	//append_event_to_file(event, username, DATA_FILENAME);//not in use due to potential bug, see comment in file.ts
-	write_events_to_file(users, DATA_FILENAME);	//TODO error
+	//append_event_to_file(event, username, DATA_FILENAME);	//not in use due to potential bug, see comment in file.ts
+	if (write_events_to_file(users, DATA_FILENAME))
+		console.log("write_events_to_file returned 1");
 }
 
 function add_user(ht: Hashtable, users: Array<User>, username: string): void {
@@ -73,17 +74,19 @@ function user_exists(ht: Hashtable, username: string): boolean {
 	return ht_entry_exists(ht, username);
 }
 
-function get_event_list(ht: Hashtable, users: Array<User>, username: string): Event_list {
+function get_event_list(ht: Hashtable, users: Array<User>, username: string): Event_list | null {
 	return ht_get_event_list(ht, users, username);
 }
 
 function delete_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
-	console.log(`delete: user=${username}, event=${event}`);
 	ht_delete_event(ht, users, username, event);
-	write_events_to_file(users, DATA_FILENAME);	//TODO error
+	if (write_events_to_file(users, DATA_FILENAME))
+		console.log("write_events_to_file returned 1");
+
 }
 
 function delete_user(ht: Hashtable, users: Array<User>, username: string): void {
 	ht_delete_event(ht, users, username);
-	write_events_to_file(users, DATA_FILENAME);	//TODO error
+	if (write_events_to_file(users, DATA_FILENAME))
+		console.log("write_events_to_file returned 1");
 }
