@@ -11,7 +11,7 @@ import { parse_event_input } from './User_interface';
 //}
 
 export function append_event_to_file(event: Event, user: string, filename: string): number {
-	let line: string = '\n' + stringify_event(event, user);
+	let line: string = stringify_event(event, user) + '\n';
 
 	try {
 		fs.appendFileSync(filename, line);
