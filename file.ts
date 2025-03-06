@@ -37,6 +37,18 @@ export function write_events_to_file(users: Array<User>, filename: string): numb
 	return 0;
 }
 
+// Not in use due to potential bug
+//
+// When reading events from file, the first occuring event for each user needs to come first.
+// This is due to how base year/month is determined. This is not necessary if all events are
+// upcoming.
+//
+// If the user would add two events in reverse chronological order and never invoke a total
+// rewrite of data, then, when these two events are past events, the order of them inside the 
+// data file will be invalid.
+//
+// Therefore, write_events_to_file() is used for adding events, as it will ensure (by always writing
+// events in chronological order for a specific user), that the order in data will never become invalid with time.
 export function append_event_to_file(event: Event, user: string, filename: string): number {
 	let line: string = stringify_event(event, user) + '\n';
 

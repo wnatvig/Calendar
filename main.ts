@@ -61,7 +61,8 @@ while (start){
 
 function add_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
 	ht_add_event(ht, users, username, event);
-	append_event_to_file(event, username, DATA_FILENAME);//TODO error
+	//append_event_to_file(event, username, DATA_FILENAME);//not in use due to potential bug, see comment in file.ts
+	write_events_to_file(users, DATA_FILENAME);	//TODO error
 }
 
 function add_user(ht: Hashtable, users: Array<User>, username: string): void {
