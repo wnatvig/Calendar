@@ -20,7 +20,7 @@ export function init_month(eventlist: Event_list, year_arg?: number, month_arg?:
 	};
 	let date, day;
 
-	// if year/month/date/day is given, use these
+	// if year/month/date/day is given, use them
 	if (year_arg !== undefined && month_arg !== undefined && date_arg !== undefined && day_arg !== undefined) {
 		month.year = year_arg;
 		month.month = month_arg;
@@ -154,37 +154,36 @@ export function get_next_month(prev_month: Month, eventlist: Event_list): Month 
 	month.first_weekday = (((prev_month.first_weekday - 1) + month_length(prev_month.year, prev_month.month)) % 7) + 1;
 
 
-	//commented code works
-	//date = 1;
-	//day = month.first_weekday;
-	//week = prev_month.week_numbers[prev_month.week_numbers.length - 1];	//last week of previous month
-	//w_index = -1;
+	date = 0;
+	day = month.first_weekday;
+	week = prev_month.week_numbers[prev_month.week_numbers.length - 1];	//last week of previous month
+	w_index = -1;
 
-	//while (date <= month.month_length) {
-	//	// WHOLE BLOCK IS COPIED FROM load_weeks() WITH ADJUSTED VARIABLE NAMES, PUT IN A FUNCTION?
-	//	if (day === MONDAY) {
-	//		if ((week === 52 || week === 53) && month.month == 1)
-	//			week = 1;
-	//		
-	//		else if ((week === 52 || week === 53) && date >= 29)
-	//			week = 1;
+	// this whole block is copied from load_weeks()
+	while (date <= month.month_length) {
+		if (day === MONDAY) {
+			if ((week === 52 || week === 53) && month.month == 1)
+				week = 1;
+			
+			else if ((week === 52 || week === 53) && date >= 29)
+				week = 1;
 
-	//		else
-	//			week++;
-	//	}
+			else
+				week++;
+		}
 
-	//	if (month.week_numbers[w_index] != week || w_index === -1) {
-	//		w_index++;
-	//		month.week_numbers[w_index] = week;
-	//	}
+		if (month.week_numbers[w_index] != week || w_index === -1) {
+			w_index++;
+			month.week_numbers[w_index] = week;
+		}
 
-	//	date++;
-	//	day++;
-	//	if (day === 8)
-	//		day = 1;
-	//}
+		date++;
+		day++;
+		if (day === 8)
+			day = 1;
+	}
 
-	load_weeks(month.year, month.month, month.first_weekday, month.week_numbers);
+	//load_weeks(month.year, month.month, month.first_weekday, month.week_numbers);
 
 	month.events_index = get_month_index(eventlist.base_year, eventlist.base_month, month.year, month.month);
 
@@ -241,7 +240,7 @@ export function get_previous_month(future_month: Month, eventlist: Event_list): 
 	//		day = 7;
 	//}
 
-	load_weeks(month.year, month.month, month.first_weekday, month.week_numbers);
+	load_weeks(month.year, month.month, month.first_weekday, month.week_numbers);	// lazy
 
 	month.events_index = get_month_index(eventlist.base_year, eventlist.base_month, month.year, month.month);
 
