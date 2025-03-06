@@ -2,8 +2,8 @@ import type { Month, Event, Event_list, Hashtable, User } from './types';
 import { Choices, display_day, display_month, user_add_event, User_input, user_pick_day } from './User_interface';
 import { init_month, get_next_month, get_previous_month } from './month';
 import { get_current_year, get_current_month, get_current_date } from './time_date';
-import { init_hashtable, ht_add_event, ht_entry_exists, ht_get_event_list } from './hashtable';
-import { append_event_to_file, add_events_from_file } from './file';
+import { init_hashtable, ht_add_event, ht_delete_event, ht_entry_exists, ht_get_event_list } from './hashtable';
+import { append_event_to_file, add_events_from_file, write_events_to_file } from './file';
 
 const DATA_FILENAME = "data";
 
@@ -16,6 +16,7 @@ let day = get_current_date();
 let start:boolean = true;
 let eventlist: Event_list = get_event_list(ht, users, "user");
 let month: Month = init_month(eventlist);
+
 
 while (start){
     display_month(month, eventlist, day);
@@ -73,4 +74,15 @@ function user_exists(ht: Hashtable, username: string): boolean {
 
 function get_event_list(ht: Hashtable, users: Array<User>, username: string): Event_list {
 	return ht_get_event_list(ht, users, username);
+}
+
+function delete_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
+	console.log(`delete: user=${username}, event=${event}`);
+	ht_delete_event(ht, users, username, event);
+	write_events_to_file(users, DATA_FILENAME);	//TODO error
+}
+
+function delete_user(ht: Hashtable, users: Array<User>, username: string): void {
+	ht_delete_event(ht, users, username);
+	write_events_to_file(users, DATA_FILENAME);	//TODO error
 }

@@ -1,14 +1,41 @@
 import * as fs from 'fs';
-import type { Event, Hashtable, User } from './types';
+import type { Event, Event_list, Hashtable, User } from './types';
 import { ht_add_event } from './hashtable';
 import { parse_event_input } from './User_interface';
 
 
-//export function write_events_to_file(users: Array<User>, filename: string): number {
+export function write_events_to_file(users: Array<User>, filename: string): number {
 	//loop through all events
 	//stringify each event
 	//write everything to file
-//}
+	
+	let output: string = "";
+
+	for (let u = 0; u < users.length; u++) {
+		let evl: Event_list = users[u].eventlist;
+		let months: Array<Array<Event>> = evl.events;
+
+		for (let m = 0; m < months.length; m++) {
+			if (months[m] === undefined)
+				continue;
+
+			for (let e = 0; e < months[m].length; e++) {
+				let event = months[m][e]
+	
+				output += stringify_event(event, users[u].username);
+			}
+		}
+	}
+
+	try {
+		fs.writeFileSync(filename, output);
+	} catch (error) {
+		console.log(`${error}`);	//TODO somehow return this error instead?
+		return 1;
+	}
+
+	return 0;
+}
 
 export function append_event_to_file(event: Event, user: string, filename: string): number {
 	let line: string = stringify_event(event, user) + '\n';
@@ -43,6 +70,7 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 		let databuffer = fs.readFileSync(filename, "utf8");
 		data = databuffer.toString();
 	} catch (error) {
+		// TODO if data does not exist -- is it really an error?
 		console.log(`${error}`);	//TODO somehow return this error instead?
 		return 1;
 	}

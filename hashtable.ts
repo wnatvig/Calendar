@@ -19,9 +19,6 @@ function simple_hash(str: string): number {
 	return hash;
 }
 
-// delete event
-// delete user
-
 
 export function init_hashtable(): Hashtable {
 	let ht: Hashtable = {table: [], table_size: HT_TABLE_SIZE, hash: HT_HASH_FUNCTION};
@@ -101,6 +98,7 @@ export function ht_delete_event(ht: Hashtable, users: Array<User>, username: str
 		return;
 
 	user_i = tail(head(user_list));
+
 
 	if (event !== undefined) {
 		delete_event_from_event_list(event, users[user_i].eventlist);
