@@ -34,3 +34,27 @@ export function add_event_to_event_list(event: Event, event_list: Event_list): v
     }
     event_list.events[month_index].push(event); //appendar eventet till rätt ställe
 }
+
+export function delete_event_from_event_list(event: Event, event_list: Event_list): void {
+	//TODO THIS month_index CAN BE NEGATIVE, CHECK NECESSARY SOMEWHERE
+    const month_index = get_month_index(event_list.base_year, event_list.base_month, 
+                                        event.year, event.month);
+
+	if (event_list.events[month_index] === undefined)	//event does not exist in eventlist
+		return;
+
+	let e: Event;
+	for (let i = 0; i < event_list.events[month_index].length; i++) {
+		e = event_list.events[month_index][i];
+		if (e.year === event.year &&
+			e.month === event.month &&
+			e.day === event.day &&
+			e.time_start === event.time_start &&
+			e.time_end === event.time_end &&
+			e.description === event.description) {
+
+			event_list.events[month_index].splice(i, 1);	//remove event at i
+			break;
+		}
+	}
+}

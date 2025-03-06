@@ -3,7 +3,7 @@ import type { Event, Event_list, Hashtable, User } from './types';
 import { pair, head, tail, is_null } from './lib/list';
 
 import { get_current_year, get_current_month } from './time_date';
-import { make_event_list, add_event_to_event_list } from './eventcreate';
+import { make_event_list, add_event_to_event_list, delete_event_from_event_list } from './eventcreate';
 
 
 const HT_TABLE_SIZE: number = 100;
@@ -103,11 +103,10 @@ export function ht_delete_event(ht: Hashtable, users: Array<User>, username: str
 	user_i = tail(head(user_list));
 
 	if (event !== undefined) {
-		// TODO write this function
-		//delete_event_from_event_list(event, users[user_i].eventlist);
+		delete_event_from_event_list(event, users[user_i].eventlist);
 	} else {
-		// remove user from hashtable and from users, how?
-		// just set entry to undefined?
+		ht.table[ht_i] = remove(head(user_list), ht.table[ht_i]);	//delete entry from ht
+		users.splice(user_i, 1);	// delete user from users
 	}
 }
 
