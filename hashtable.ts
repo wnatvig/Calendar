@@ -1,6 +1,6 @@
 import type { List, Pair } from './lib/list';
 import type { Event, Event_list, Hashtable, User } from './types';
-import { pair, head, tail, is_null } from './lib/list';
+import { pair, head, tail, is_null, remove } from './lib/list';
 
 import { get_current_year, get_current_month } from './time_date';
 import { make_event_list, add_event_to_event_list, delete_event_from_event_list } from './eventcreate';
