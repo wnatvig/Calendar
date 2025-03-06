@@ -22,7 +22,7 @@ export function write_events_to_file(users: Array<User>, filename: string): numb
 			for (let e = 0; e < months[m].length; e++) {
 				let event = months[m][e]
 	
-				output += stringify_event(event, users[u].username);
+				output += stringify_event(event, users[u].username) + '\n';
 			}
 		}
 	}
