@@ -1,5 +1,8 @@
-import { Event, Event_list, Month } from "./types";
-import { display_event, display_month} from "./User_interface";
+import { NAMES_MONTHS } from "../defs";
+import { add_event_to_event_list, make_event, make_event_list } from "../events";
+import { get_current_date, get_current_month, get_current_year } from "../time_date";
+import { Event, Event_list, Month } from "../types";
+import { display_event, display_month, display_next_event} from "../User_interface";
 
 describe("display_event", () => {
     let consoleSpy:jest.SpyInstance;
@@ -90,7 +93,7 @@ describe("display_month", () => {
     });
 });
 
-describe("Display_next_month", () =>{
+describe("Display_next_event", () =>{
     let consoleSpy:jest.SpyInstance;
     
     beforeEach(() => {
@@ -101,7 +104,38 @@ describe("Display_next_month", () =>{
         consoleSpy.mockRestore();
     });
 
-    it("should print No upcoming events if there are no events", () => {
+    it("should print 'No upcoming events' if there are no events", () => {
+        let event_list = make_event_list(get_current_year(),get_current_month(), []);
+        display_next_event(event_list);
+
+        expect(consoleSpy).toHaveBeenCalledWith("No upcoming events");
+    });
+
+    it("should print 'No upcoming events' if all events have passed", () => {
+        let event_list = make_event_list(2024, 1, []);
+        let event1 = make_event(1, 1, 2025, 1200, 1200, "Tandläkare");
+        add_event_to_event_list(event1, event_list);
+
+        display_next_event(event_list);
+
+        expect(consoleSpy).toHaveBeenCalledWith("No upcoming events");
+    });
+
+    it("should print the next event with just one event", () =>{
+        let event_list = make_event_list(get_current_year(), get_current_month(), []);
+        let event1 = make_event(get_current_date(), 
+                                get_current_month(), 
+                                get_current_year(),
+                                1200,
+                                1200,
+                                "Tandläkare");
+        add_event_to_event_list(event1, event_list);
         
-    })
-})
+        display_next_event(event_list);
+
+        expect(consoleSpy).toHaveBeenCalledWith(`Date: ${NAMES_MONTHS[event1.month]} ${event1.day}, ${event1.year}`);
+        expect(consoleSpy).toHaveBeenCalledWith("From: 12:00");
+        expect(consoleSpy).toHaveBeenCalledWith("To: 12:00");
+        expect(consoleSpy).toHaveBeenCalledWith("Desciption: Tandläkare");
+    });
+});

@@ -1,7 +1,7 @@
-import * as td from './time_date';
+import * as td from '../time_date';
 import { init_month, load_weeks, get_next_month, get_previous_month, 
-         get_month_index, month_length, leap_year } from "./month";
-import { Month, Event_list } from "./types";
+         get_month_index, month_length, leap_year } from "../month";
+import { Month, Event_list } from "../types";
 import { NAMES_WEEKDAYS, NAMES_MONTHS, MONTH_LENGTHS,
     MONDAY,
     TUESDAY,
@@ -9,7 +9,7 @@ import { NAMES_WEEKDAYS, NAMES_MONTHS, MONTH_LENGTHS,
     THURSDAY,
     FRIDAY,
     SATURDAY,
-    SUNDAY } from './defs';
+    SUNDAY } from '../defs';
 
     describe("Calendar Functions", () => {
 
@@ -42,6 +42,16 @@ import { NAMES_WEEKDAYS, NAMES_MONTHS, MONTH_LENGTHS,
             expect(month.month).toBe(3);
             expect(month.month_length).toBe(31);
             expect(month.first_weekday).toBe(5);
+        });
+
+        test("init_month with only event_list as argument", () =>{
+            const Event_list: Event_list = { base_year: 2025, base_month: 1, events: [] };
+            const month = init_month(Event_list);
+            
+            expect(month.year).toBe(td.get_current_year());
+            expect(month.month).toBe(td.get_current_month());
+            expect(month.month_length).toBe(month_length(td.get_current_year(), 
+                                                         td.get_current_month()));
         });
     
         test("get_next_month", () => {

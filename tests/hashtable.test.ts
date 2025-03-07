@@ -1,8 +1,8 @@
-import { make_event } from "./events";
-import { ht_add_event, ht_entry_exists, ht_get_event_list, init_hashtable } from "./hashtable";
-import { get_current_date, get_current_month, get_current_year } from "./time_date";
-import { User } from "./types";
-import { find_next_event } from "./User_interface";
+import { make_event } from "../events";
+import { ht_add_event, ht_delete_event, ht_entry_exists, ht_get_event_list, init_hashtable } from "../hashtable";
+import { get_current_date, get_current_month, get_current_year } from "../time_date";
+import { User } from "../types";
+import { find_next_event } from "../User_interface";
 
 describe("Hash_init", () => {
     it("should produce an array of length hash.table_size", () => {
@@ -26,7 +26,8 @@ describe("ht_entry_exist", () =>{
     it("should return false if there is no user", () => {
         expect(ht_entry_exists(hash, "user")).toBe(false);
     });
-})
+});
+
 describe("ht_add_event", () =>{
     let hash = init_hashtable();
     let users: Array<User> = [];
@@ -52,6 +53,14 @@ describe("ht_add_event", () =>{
     });
 });
 
-describe("ht_remove_event", () => {
+describe("ht_delete_event", () => {
+    it("should remove a user from users", () =>{
+        let hash = init_hashtable();
+        let users: Array<User> = [];
+        ht_add_event(hash, users, "user");
 
+        ht_delete_event(hash, users, "user");
+        expect(ht_entry_exists(hash, "user")).toBe(false)
+
+    })
 });
