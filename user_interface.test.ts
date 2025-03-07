@@ -2,7 +2,7 @@ import { Event, Event_list, Month } from "./types";
 import { display_event, display_month} from "./User_interface";
 
 describe("display_event", () => {
-    let consoleSpy;
+    let consoleSpy:jest.SpyInstance;
     
     beforeEach(() => {
         consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
@@ -32,7 +32,7 @@ describe("display_event", () => {
 });
 
 describe("display_month", () => {
-    let consoleSpy, stdoutSpy;
+    let consoleSpy:jest.SpyInstance, stdoutSpy: jest.SpyInstance;
     
     beforeEach(() => {
         consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
@@ -89,3 +89,19 @@ describe("display_month", () => {
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringMatching(/\x1b\[34m22\x1b\[0m/));
     });
 });
+
+describe("Display_next_month", () =>{
+    let consoleSpy:jest.SpyInstance;
+    
+    beforeEach(() => {
+        consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleSpy.mockRestore();
+    });
+
+    it("should print No upcoming events if there are no events", () => {
+        
+    })
+})
