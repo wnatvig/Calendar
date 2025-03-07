@@ -476,42 +476,46 @@ export function display_event(event: Event):void{
 
 //display_event(event1);
 /**
- * Finds and displays the next upcoming event from the provided event list
- * If it does not find any event it will print "No upcoming events"
- * @param {Event_list} event_list - An object containing all events
+ * Finds the next upcoming event from the provided event list.
+ * @param {Event_list} event_list - An object containing all events.
+ * @returns {Event | null} The next upcoming event or null if none found.
  */
-export function next_event(event_list: Event_list): void {
+export function find_next_event(event_list: Event_list): Event | null {
     let month_index = get_month_index(event_list.base_year,
                                       event_list.base_month,
                                       get_current_year(),
                                       get_current_month());
-    let nextEvent: Event | null = null;
     let evs = event_list.events;
-    
 
     for (let i = month_index; i < evs.length; i++) {
         for (let ev of evs[i]) {
             if (i === month_index) {
                 // For the current month, only consider events on or after today
                 if (ev.day >= get_current_date()) {
-                    nextEvent = ev;
-                    break;
-                } else {}
+                    return ev;
+                }
             } else {
                 // For future months, take the first event
-                nextEvent = ev;
-                break;
+                return ev;
             }
         }
-        if (nextEvent !== null) break;
     }
-    
+    return null;
+}
+
+/**
+ * Finds and displays the next upcoming event.
+ * If no event is found, it prints "No upcoming events".
+ * @param {Event_list} event_list - An object containing all events.
+ */
+export function display_next_event(event_list: Event_list): void {
+    const nextEvent = find_next_event(event_list);
     if (nextEvent !== null) {
         display_event(nextEvent);
     } else {
         console.log("No upcoming events");
     }
 }
-
-next_event(Eent_array1);
+console.log(Eent_array1.events);
+display_next_event(Eent_array1);
 //user_add_event(Eent_array1);
