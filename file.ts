@@ -19,6 +19,10 @@ import { parse_event_input } from './User_interface';
  * namn, 2025, 4, 30, 00:00, 23:59, \"valborg\"\n
  *
  * All events for a specific user needs to be in chronological order.
+ *
+ * users with no events are stored in the following format:
+ * !username\n
+ *
  */
 
 
@@ -40,6 +44,8 @@ export function write_events_to_file(users: Array<User>, filename: string): numb
 		let evl: Event_list = users[u].eventlist;
 		let months: Array<Array<Event>> = evl.events;
 
+		let no_events: boolean = true;
+
 		for (let m = 0; m < months.length; m++) {
 			if (months[m] === undefined)
 				continue;
@@ -49,8 +55,11 @@ export function write_events_to_file(users: Array<User>, filename: string): numb
 	
 				// one line per event
 				output += stringify_event(event, users[u].username) + '\n';
+				no_events = false;
 			}
 		}
+		if (no_events)	// user got no events, write no-event line
+			output += '!' + users[u].username; + '\n';
 	}
 
 	// write (truncate/create file) output to file
@@ -142,6 +151,12 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 
 
 		// current line consists of characters from data[start] to data[end]
+
+		if (data[start] === '!') {	// user with no events
+			let username = section_to_string(data, start+1, end);
+			ht_add_event(ht, users, username);
+			continue;
+		}
 
 		// split line into tokens
 		let tokens = tokenize(data, start, end);
@@ -266,4 +281,14 @@ function tokenize(str: string, start: number, end: number): Array<string> {
 	}
 
 	return tokens;
+}
+
+// get section [start, end] of str as a separate string
+function section_to_string(str: string, start: number, end: number): string {
+	let result: string = "";
+
+	for (let i = start; i < end; i++)
+		result += str[i];
+	
+	return result;
 }

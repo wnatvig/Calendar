@@ -14,13 +14,10 @@ let ht: Hashtable = init_hashtable();
 let users: Array<User> = [];
 add_events_from_file(ht, users, DATA_FILENAME);
 
-let selected_day: Day = {year: get_current_year(), month: get_current_month(), day: get_current_date()};
-
-//This is simply so the code does not complain, even though it does nothing
-let user:string = "Not_a_user";
-add_user(ht, users, user);
-let eventlist: Event_list = get_event_list(ht, users, user)!;
-let month: Month = init_month(eventlist);
+let user: string = "";
+let eventlist: Event_list;
+let month: Month;
+let selected_day: Day;
 
 
 while(true) {
@@ -44,10 +41,10 @@ while(true) {
                 console.log("Invalid entry: Usernames must be unique")
                 continue
             } else {
-                add_user(ht, users, account);
+				user = account;
+                add_user(ht, users, user);
                 account_created = true;
             }
-            
         }
 
     } else if (choice === "login") {
@@ -55,8 +52,6 @@ while(true) {
         while (!account_found){
             user = pt("Account name: ")
             if (user_exists(ht, user)) {
-                eventlist = get_event_list(ht,users, user)!;
-                month = init_month(eventlist);
                 account_found = true;
                 start = true
             } else{
@@ -64,12 +59,14 @@ while(true) {
                 let answer = User_input("> ", [["y", "yes"], ["n", "no"]])
                 if (answer === "n") {
                     account_found = true;
-
                 }
             }
         }
     }
 
+	selected_day = {year: get_current_year(), month: get_current_month(), day: get_current_date()};
+	eventlist = get_event_list(ht, users, user)!;
+	month = init_month(eventlist);
 
     while (start) {
         display_month(month, eventlist, selected_day);
@@ -129,6 +126,8 @@ function add_event(ht: Hashtable, users: Array<User>, username: string, event: E
 
 function add_user(ht: Hashtable, users: Array<User>, username: string): void {
 	ht_add_event(ht, users, username);
+	if (write_events_to_file(users, DATA_FILENAME))	// users with no events are still saved in file
+		console.log("write_events_to_file returned 1");
 }
 
 function user_exists(ht: Hashtable, username: string): boolean {
