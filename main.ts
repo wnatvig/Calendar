@@ -23,6 +23,7 @@ let selected_day: Day;
 while(true) {
     let start:boolean = false; 
     console.log("Welcome to DigiCal, your personal digital calendar");
+    console.log();
     let choice = User_input("> ", [["login", "Log in to your accout"],
                                  ["reg", "Register a new account"],
                                   ["quit", "End the program"]]);
@@ -72,6 +73,9 @@ while(true) {
 	month = init_month(eventlist);
 
     while (start) {
+        for (let i = 0; i<100; i++){
+            console.log()
+        }
         display_month(month, eventlist, selected_day);
 		if (month.year === selected_day.year && month.month === selected_day.month)
 			display_day(eventlist, month, selected_day.day);
