@@ -1,5 +1,5 @@
 import { NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
-import { Month, Event_list, Event} from "./types";
+import { Day, Month, Event_list, Event} from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
 import { add_event_to_event_list, make_event, make_event_list } from "./events";
 import { get_month_index, init_month, month_length } from "./month";
@@ -34,10 +34,9 @@ function days_with_events(event_array: Array<Event>): Array<number> {
  * - Week numbers displayed at the beginning of each row.
  * @param {Month} month - the month to be displayed
  * @param {Event_list} Event_list - The events for the calendar
- * @param {number} day - The date that should be highlighted
- * @precondition day is a positive whole number less than or equal to month.month_lenght
+ * @param {Day} selected_day - The date that should be highlighted
  */
-export function display_month(month: Month, Event_list: Event_list, day: number): void{    
+export function display_month(month: Month, Event_list: Event_list, selected_day: Day): void {
     let day_array = divide_days_in_weeks(month);
     let week_end_index = 7;
     //TODO: Add a function to show days when there are events
@@ -50,7 +49,7 @@ export function display_month(month: Month, Event_list: Event_list, day: number)
 
 
     console.log();
-    console.log("          ",NAMES_MONTHS[month.month] ,month.year);
+    console.log("          ", NAMES_MONTHS[month.month], month.year);
     console.log("   Mon Tue Wed Thu Fri Sat Sun")
     for (let weeks of month.week_numbers) {
         if (weeks < 10) {
@@ -60,28 +59,29 @@ export function display_month(month: Month, Event_list: Event_list, day: number)
         }
         for(let i = week_end_index - 7; i < week_end_index; i++) {
             if (day_array[i] !== undefined){
-                if (day_array[i] === get_current_date() && day_array[i] === day && is_current_month){
+                if (day_array[i] === get_current_date() && is_current_month &&	// day === today
+					day_array[i] === selected_day.day && month.month === selected_day.month && month.year === selected_day.year) {	// day === selected day
                     //Color background green, with whit text if it is today and viewed day
                     if (day_array[i] < 10) {
                         process.stdout.write('  ' + `\x1b[42;37m ${day_array[i]}\x1b[0m`);
                     } else{
                         process.stdout.write('  ' + `\x1b[42;37m${day_array[i]}\x1b[0m`);
                     }
-                } else if(day_array[i] === get_current_date() && is_current_month){
+                } else if(day_array[i] === get_current_date() && is_current_month) {
                     //Color text green if it is todays date
                     if (day_array[i] < 10) {
                         process.stdout.write('  ' + `\x1b[32m ${day_array[i]}\x1b[0m`);
                     } else{
                         process.stdout.write('  ' + `\x1b[32m${day_array[i]}\x1b[0m`);
                     }
-                } else if(day_array[i] === day && event_days.includes(day_array[i])) { 
+                } else if(event_days.includes(day_array[i]) && day_array[i] === selected_day.day && month.month === selected_day.month && month.year === selected_day.year) { 
                     //Colors the background blue if it the highlighted day and there is at least one event on it
                     if (day_array[i] < 10) {
                         process.stdout.write('  ' + `\x1b[44;37m ${day_array[i]}\x1b[0m`);
                     } else{
                         process.stdout.write('  ' + `\x1b[44;37m${day_array[i]}\x1b[0m`);
                     }
-                } else if(day_array[i] === day){
+                } else if(day_array[i] === selected_day.day && month.month === selected_day.month && month.year === selected_day.year){
                     //Colors backgorund white to highlight the day the user is on
                     if (day_array[i] < 10) {
                         process.stdout.write('  ' + `\x1b[47;30m ${day_array[i]}\x1b[0m`);
@@ -115,13 +115,13 @@ export function display_month(month: Month, Event_list: Event_list, day: number)
 };
 
 /**
- * Displays all events for a specific day in the terminal window
+ * Displays all events for a specific day in the terminal window.
  * @param {Event_list} event_list - The eventlist where all the events are stored
- * @param {Month} month - The month the day is in 
+ * @param {Month} month - The month the day is in
  * @param {number} day - The date to be viewed
- * @precondition day is a positive whole number less than or equal to month.month_lenght
+ * @precondition day is a positive whole number less than or equal to month.month_length
  */
-export function display_day(event_list: Event_list, month: Month, day: number):void{
+export function display_day(event_list: Event_list, month: Month, day: number): void {
     let days_events: Array<Event> = []
     if (event_list.events[month.events_index] !== undefined){
         days_events = event_list.events[month.events_index].filter(events => events.day === day);
