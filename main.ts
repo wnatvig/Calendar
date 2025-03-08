@@ -1,5 +1,5 @@
 import type { Month, Event, Event_list, Hashtable, User } from './types';
-import { Choices, display_day, display_month, user_add_event, User_input, user_pick_day } from './User_interface';
+import { Choices, display_day, display_month, user_add_event, User_input, user_pick_day, user_select_event } from './User_interface';
 import { init_month, get_next_month, get_previous_month } from './month';
 import { get_current_year, get_current_month, get_current_date } from './time_date';
 import { init_hashtable, ht_add_event, ht_delete_event, ht_entry_exists, ht_get_event_list } from './hashtable';
@@ -14,7 +14,7 @@ add_events_from_file(ht, users, DATA_FILENAME);
 
 let day = get_current_date();
 let start:boolean = true;
-let eventlist: Event_list = get_event_list(ht, users, "user")!;
+let eventlist: Event_list = ht_get_event_list(ht, users, "user")!;
 let month: Month = init_month(eventlist);
 
 
@@ -54,6 +54,17 @@ while (start){
         break;
     } else if (action === "view") {
         day = user_pick_day(month);
+
+    } else if (action === "edit") {
+        let event = user_select_event(eventlist);
+        if (event) {
+            console.log("Do you want to delete this event? (yes/no)");
+            let confirm_delete = User_input(">", [["yes", "Confirm deletion"], ["no", "Cancel"]]);
+            if (confirm_delete === "yes") {
+                delete_event(ht, users, "user", event);
+                console.log("Event deleted successfully.");
+            }
+        }
     }
 };
 
