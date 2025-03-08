@@ -357,14 +357,18 @@ export function user_select_event(event_list: Event_list): Event | null {
         return null;
     });
 
+    const monthIndex = month - 1;
+
     const date = prompt_for_number("Enter date: ", (num: number) => {
-        if (num < 1 || num > month_length(year, month)) {
-            return `Invalid entry: ${NAMES_MONTHS[month]} only has ${month_length(year, month)} days`;
+        if (num < 1 || num > month_length(year, monthIndex + 1)) {
+            return `Invalid entry: ${NAMES_MONTHS[monthIndex]} only has ${month_length(year, monthIndex + 1)} days`;
         }
         return null;
     });
 
-    const events_on_date = event_list.events[month].filter(event => event.year === year && event.day === date);
+    const events_on_date = event_list.events[monthIndex] 
+        ? event_list.events[monthIndex].filter(event => event.year === year && event.day === date) 
+        : [];
 
     if (events_on_date.length === 0) {
         console.log("No events found on this date.");
