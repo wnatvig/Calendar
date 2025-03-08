@@ -33,6 +33,7 @@ export const NAMES_MONTHS: Array<string> = [
 	"December"
 ];
 
+// do not use directly, use month_length() from month.ts as it handles february on leap years properly
 export const MONTH_LENGTHS: Array<number> = [
 	0,
 	31,
