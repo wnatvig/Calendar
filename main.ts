@@ -61,7 +61,7 @@ while(true) {
                 start = true
             } else{
                 console.log("Could not find user, do you wish to try again?")
-                let answer = User_input(">", [["y", "yes"], ["n", "no"]])
+                let answer = User_input("> ", [["y", "yes"], ["n", "no"]])
                 if (answer === "n") {
                     account_found = true;
 
@@ -89,7 +89,7 @@ while(true) {
         console.log()
         console.log("What action do you want to take?")
         console.log()
-        let action = User_input(">", actions_list);
+        let action = User_input("> ", actions_list);
         if (action === "next") {
             month = get_next_month(month, eventlist);
             let current_month = init_month(eventlist);
@@ -109,7 +109,7 @@ while(true) {
             let event = user_select_event(eventlist);
             if (event) {
                 console.log("Do you want to delete this event? (yes/no)");
-                let confirm_delete = User_input(">", [["yes", "Confirm deletion"], ["no", "Cancel"]]);
+                let confirm_delete = User_input("> ", [["yes", "Confirm deletion"], ["no", "Cancel"]]);
                 if (confirm_delete === "yes") {
                     delete_event(ht, users, user, event);
                     console.log("Event deleted successfully.");
