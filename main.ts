@@ -19,11 +19,14 @@ let eventlist: Event_list;
 let month: Month;
 let selected_day: Day;
 
+let welcome_prompt = true;
 
 while(true) {
     let start:boolean = false; 
-    console.log("Welcome to DigiCal, your personal digital calendar");
-    console.log();
+	if (welcome_prompt) {
+		console.log("Welcome to DigiCal, your personal digital calendar");
+	}
+	console.log();
     let choice = User_input("> ", [["login", "Log in to your accout"],
                                  ["reg", "Register a new account"],
                                   ["quit", "End the program"]]);
@@ -52,20 +55,14 @@ while(true) {
         }
 
     } else if (choice === "login") {
-        let account_found = false;
-        while (!account_found){
-            user = pt("Account name: ")
-            if (user_exists(ht, user)) {
-                account_found = true;
-                start = true
-            } else{
-                console.log("Could not find user, do you wish to try again?")
-                let answer = User_input("> ", [["y", "yes"], ["n", "no"]])
-                if (answer === "n") {
-                    account_found = true;
-                }
-            }
-        }
+		user = pt("Account name: ");
+		if (user_exists(ht, user)) {
+			start = true;
+		} else {
+			console.log(`Could not find user '${user}'`);
+			welcome_prompt = false;
+			continue;
+		}
     }
 
 	selected_day = {year: get_current_year(), month: get_current_month(), day: get_current_date()};
@@ -73,9 +70,12 @@ while(true) {
 	month = init_month(eventlist);
 
     while (start) {
-        for (let i = 0; i<100; i++){
-            console.log()
+		//clear
+		for (let i = 0; i < 100; i++){
+            console.log();
         }
+		//console.log('\x1bc');
+
         display_month(month, eventlist, selected_day);
 		if (month.year === selected_day.year && month.month === selected_day.month)
 			display_day(eventlist, month, selected_day.day);
@@ -104,6 +104,7 @@ while(true) {
             let event = user_add_event();
             add_event(ht, users, user, event);
         } else if (action === "logout") {
+			welcome_prompt = true;
             break;
         } else if (action === "view") {
 			selected_day.day = user_pick_day(month);
