@@ -9,6 +9,17 @@ import { NAMES_WEEKDAYS, NAMES_MONTHS, MONTH_LENGTHS,
 		SATURDAY,
 		SUNDAY } from './defs';
 
+
+/**
+ * Initializes a month (type Month). Month can be specified with optional parameters, if no
+ * month is specified (one or more optional arguments are missing) it will initialize current month.
+ * @param {Event_list} eventlist - event list associated with month, necessary to set month.events_index
+ * @param {number} year_arg - optional, year
+ * @param {number} month_arg - optional, month
+ * @param {number} date_arg - optional, date
+ * @param {number} day_arg - optional, weekday corresponding to year/month/date
+ * @return {Month} - returns type Month
+ */
 export function init_month(eventlist: Event_list, year_arg?: number, month_arg?: number, date_arg?: number, day_arg?: number): Month {
 	let month: Month = {
 		year: 0,
@@ -54,8 +65,17 @@ export function init_month(eventlist: Event_list, year_arg?: number, month_arg?:
 	return month;
 }
 
-export function load_weeks(year: number, target_month: number, first_weekday: number, week_numbers: Array<number>): void {
+/**
+ * Get the weeks (week numbers) of a specific month (specified with year+month).
+ * @param {number} target_year - year
+ * @param {number} target_month - month
+ * @param {number} first_weekday - weekday of first day in specified month
+ * @param {Array<number>} week_numbers - outputs week numbers to this array
+ * @return {void}
+ */
+export function load_weeks(target_year: number, target_month: number, first_weekday: number, week_numbers: Array<number>): void {
 
+	let year = target_year;
 	let month = target_month;
 	let day = first_weekday;
 	let date = 1;	// date corresponding to day
@@ -132,6 +152,12 @@ export function load_weeks(year: number, target_month: number, first_weekday: nu
 	}
 }
 
+/**
+ * Gets information about the next month based on a reference month.
+ * @param {Month} prev_month - previous/current month
+ * @param {Event_list} eventlist - eventlist associated with prev_month and month
+ * @return {Month} - returns the next month
+ */
 export function get_next_month(prev_month: Month, eventlist: Event_list): Month {
 	let month: Month = {
 		year: 0,
@@ -191,6 +217,13 @@ export function get_next_month(prev_month: Month, eventlist: Event_list): Month 
 	return month;
 }
 
+/**
+ * Gets information about the previous month based on a reference month.
+ * Currently invokes load_weeks() which is not optimal.
+ * @param {Month} future_month - future/current month
+ * @param {Event_list} eventlist - eventlist associated with future_month and month
+ * @return {Month} - returns the previous month
+ */
 export function get_previous_month(future_month: Month, eventlist: Event_list): Month {
 	let month: Month = {
 		year: 0,
@@ -248,6 +281,15 @@ export function get_previous_month(future_month: Month, eventlist: Event_list): 
 	return month;
 }
 
+/**
+ * Get month index (~the number of months between specified month and base month, see types.ts)
+ * NOTE: This can return a negative number, which is an invalid index.
+ * @param{number} base_year - base year
+ * @param{number} base_month - base month
+ * @param{number} year - target year
+ * @param{number} month - target month
+ * @return {number} - returns month index (base - target)
+ */
 export function get_month_index(base_year: number, base_month: number,
 						 year: number, month: number): number {
 	let year_diff = year - base_year;

@@ -4,6 +4,34 @@ import { ht_add_event } from './hashtable';
 import { parse_event_input } from './User_interface';
 
 
+/* STORING EVENTS ON THE SYSTEM
+ * All events, for all users, can be stored in a file.
+ * Each event will be one line with the following structure:
+ * user, year, month, date, start time, end time, description
+ *
+ * user: a username, only alphanumerical characters
+ * year/month/date: only numerical characters
+ * start time/end time: valid time in the format hh:mm
+ * description: string starting and ending with \"
+ *              description itself cannot contain \
+ *
+ * example:
+ * namn, 2025, 4, 30, 00:00, 23:59, \"valborg\"\n
+ *
+ * All events for a specific user needs to be in chronological order.
+ */
+
+
+
+/**
+ * Write all events for all users to file.
+ * Will truncate existing file or create it if it does not exist.
+ * @param {Array<User>} users - array of all users, each User contains an event list
+ * @param {string} filename - file name of the file to write to
+ * @return {number} - returns any of the following codes:
+ *     0: success
+ *     1: error writing to file, more information was written to console
+ */
 export function write_events_to_file(users: Array<User>, filename: string): number {
 	let output: string = "";
 
@@ -25,7 +53,7 @@ export function write_events_to_file(users: Array<User>, filename: string): numb
 		}
 	}
 
-	// write (truncate/create file) output to fil
+	// write (truncate/create file) output to file
 	try {
 		fs.writeFileSync(filename, output);
 	} catch (error) {
@@ -36,6 +64,8 @@ export function write_events_to_file(users: Array<User>, filename: string): numb
 	return 0;
 }
 
+
+// append_event_to_file()
 // Not in use due to potential bug
 //
 // When reading events from file, the first occuring event for each user needs to come first.
@@ -61,6 +91,8 @@ export function append_event_to_file(event: Event, user: string, filename: strin
 	return 0;
 }
 
+// takes an event and a username and returns a string that can be written to file
+// does not include a newline at the end
 function stringify_event(event: Event, username: string): string {
 	let time_start_min = `${event.time_start % 100}`.padStart(2, '0');
 	let time_start_h = `${Math.floor((event.time_start - (event.time_start % 100))/100)}`.padStart(2, '0');
@@ -69,9 +101,19 @@ function stringify_event(event: Event, username: string): string {
 	return `${username}, ${event.year}, ${event.month}, ${event.day}, ${time_start_h}:${time_start_min}, ${time_end_h}:${time_end_min}, \\\"${event.description}\\\"`;
 }
 
-//0: success
-//1: error reading data
-//2: error in data
+
+/**
+ * Read in events from file and add events to hashtable and user array.
+ * If the user specified alongside an event does not exist it will be created.
+ * @param {Hashtable} ht - initialized hashtable, used to link a user to a specific index in users
+ * @param {Array<User>} users - list of users with event lists
+ * @param {string} filename - file name of file to read from
+ * @precondition filename is a valid file which contents adheres to specification, see top of file.ts
+ * @return {number} - returns any of the following codes:
+ *     0: success
+ *     1: error reading from file, more information was written to console
+ *     2: error in data, more information was written to console
+ */
 export function add_events_from_file(ht: Hashtable, users: Array<User>, filename: string): number {
 	let data: string;
 
@@ -105,7 +147,7 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 		let tokens = tokenize(data, start, end);
 
 		if (tokens.length != 7) {
-			console.log(`invalid data in file '${filename}' at line ${line}:`);
+			console.log(`invalid data in file '${filename}' at line ${line}`);
 			return 2;
 		}
 
@@ -121,7 +163,7 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 		if (parsed_event[0] !== null && parsed_event[1] === 0) {
 			ht_add_event(ht, users, tokens[0], parsed_event[0]);
 		} else {
-			console.log(`invalid data in file '${filename}' at line ${line}: parse_event_input returned ${parsed_event[1]}$`);
+			console.log(`invalid data in file '${filename}' at line ${line}: parse_event_input returned ${parsed_event[1]}`);
 			return 2;
 		}
 	}
@@ -129,8 +171,15 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 	return 0;
 }
 
-//first call should be get_line(data, [0, 0])
-//if returned [start, end], start === end, we are done
+
+/**
+ * Get next line in string by start and end index.
+ * @param {string} str - source string
+ * @param {[number, number]} a - current line, should be [0, 0] on initial call
+ * @return {[number, number]} - returns start/end indices: [start, end]
+ *                              str[start] is part of the line, str[end] is not
+ *                              when all lines have been read: start === end
+ */
 function get_line(str: string, a: [number, number]): [number, number] {
 	let start = a[0];
 	let end = a[1];
@@ -150,10 +199,23 @@ function get_line(str: string, a: [number, number]): [number, number] {
 	return [start, end];
 }
 
+
+// returns true if char is a space/tab/newline, otherwise false
+// precondition: char is a string of length 1
 function whitespace(char: string): boolean {
 	return ((char === ' ') || (char === '\t') || (char === '\n'));
 }
 
+
+/**
+ * Tokenize section of string between [start] and [end]
+ * @param {string} str - source string
+ * @param {number} start - start index, inclusive
+ * @param {number} end - end index, exclusive
+ * @precondition start < str.length and end <= str.length
+ * @precondition section [start, end] in str is valid according to specification, see top of file.ts
+ * @return {Array<string>} - returs array of tokens (strings)
+ */
 function tokenize(str: string, start: number, end: number): Array<string> {
 	let tokens_array: Array<Array<string>> = [];	//array of tokens (arrays of chars), converted to Array<string> before return
 	let tokens: Array<string> = [];
@@ -196,8 +258,10 @@ function tokenize(str: string, start: number, end: number): Array<string> {
 		t_i++;
 	}
 
-	if (t_i === 0) t--;
-	for (let i = 0; i <= t; i++) {
+	if (t_i === 0) t--;	//token at t is empty
+
+	//convert from Array<Array<string>> (str.length == 1) to Array<string> (str.length >= 1)
+	for (let i = 0; i <= t; i++) {	
 		tokens[i] = tokens_array[i].join('');
 	}
 
