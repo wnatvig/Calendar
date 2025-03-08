@@ -6,69 +6,122 @@ import { init_hashtable, ht_add_event, ht_delete_event, ht_entry_exists, ht_get_
 import { append_event_to_file, add_events_from_file, write_events_to_file } from './file';
 
 const DATA_FILENAME = "data";
+const pt = require('prompt-sync')();
 
+//creates the hashtable and array of users and then fills them with all the data
+//we have on them
 let ht: Hashtable = init_hashtable();
 let users: Array<User> = [];
-add_user(ht, users, "user");
 add_events_from_file(ht, users, DATA_FILENAME);
 
 let day = get_current_date();
-let start:boolean = true;
-let eventlist: Event_list = ht_get_event_list(ht, users, "user")!;
+
+//This is simply so the code does not complain, even though it does nothing
+let user:string = "Not_a_user";
+add_user(ht, users, user);
+let eventlist: Event_list = get_event_list(ht, users, user)!;
 let month: Month = init_month(eventlist);
 
 
-while (start){
-    display_month(month, eventlist, day);
-    display_day(eventlist, month, day);
-    const actions_list: Choices = [["next", "Displays the next month"],
-                                   ["prev", "Display the previous month"],
-                                   ["add", "Add an event to the calendar"],
-                                   ["edit", "Edit an event"],
-                                   ["view", "View a day and all it's events"],
-                                   ["quit", "End the program"]];
-    
-    //Need function to view events
-    //Need fuction to fetch specific events (such as next events)
-    //Need function to show all events
-    console.log()
-    console.log("What action do you want to take?")
-    console.log()
-    let action = User_input(">", actions_list);
-    if (action === "next") {
-        month = get_next_month(month, eventlist);
-        let current_month = init_month(eventlist);
-        day = month.month === current_month.month && month.year === current_month.year
-             ? get_current_date()
-             :1;
-    } else if(action === "prev") {
-        month = get_previous_month(month, eventlist);
-        let current_month = init_month(eventlist);
-        day = month.month === current_month.month && month.year === current_month.year
-            ? get_current_date()
-            :1;
-    } else if (action === "add") {
-        let event = user_add_event();
-		add_event(ht, users, "user", event);
-    } else if (action === "quit") {
+while(true) {
+    let start:boolean = false; 
+    console.log("Welcome to DigiCal, your personal digital calendar");
+    let choice = User_input(">", [["login", "Log in to your accout"],
+                                 ["reg", "Register a new account"],
+                                  ["quit", "End the program"]]);
+    if (choice === "quit"){
         break;
-    } else if (action === "view") {
-        day = user_pick_day(month);
+    } else if (choice === "reg") {
+        console.log("What do you want your account name to be?")
+        let account: string;
+        let account_created = false;
+        while (!account_created) {
+            account = pt("> ")
+            if  (account.includes("\\")) {
+                console.log("Invalid entry: Cannot use \\ in account name")
+                continue
+            } else if (user_exists(ht, account)){
+                console.log("Invalid entry: Usernames must be unique")
+                continue
+            } else {
+                add_user(ht, users, account);
+                account_created = true;
+            }
+            
+        }
 
-    } else if (action === "edit") {
-        let event = user_select_event(eventlist);
-        if (event) {
-            console.log("Do you want to delete this event? (yes/no)");
-            let confirm_delete = User_input(">", [["yes", "Confirm deletion"], ["no", "Cancel"]]);
-            if (confirm_delete === "yes") {
-                delete_event(ht, users, "user", event);
-                console.log("Event deleted successfully.");
+    } else if (choice === "login") {
+        let account_found = false;
+        while (!account_found){
+            user = pt("Account name: ")
+            if (user_exists(ht, user)) {
+                eventlist = get_event_list(ht,users, user)!;
+                month = init_month(eventlist);
+                account_found = true;
+                start = true
+            } else{
+                console.log("Could not find user, do you wish to try again?")
+                let answer = User_input(">", [["y", "yes"], ["n", "no"]])
+                if (answer === "n") {
+                    account_found = true;
+
+                }
             }
         }
     }
+
+
+    while (start){
+        display_month(month, eventlist, day);
+        display_day(eventlist, month, day);
+        const actions_list: Choices = [["next", "Displays the next month"],
+                                    ["prev", "Display the previous month"],
+                                    ["add", "Add an event to the calendar"],
+                                    ["edit", "Edit an event"],
+                                    ["view", "View a day and all it's events"],
+                                    ["logout", "Log out of this user"]];
+        
+        //Need function to view events
+        //Need fuction to fetch specific events (such as next events)
+        //Need function to show all events
+        console.log()
+        console.log("What action do you want to take?")
+        console.log()
+        let action = User_input(">", actions_list);
+        if (action === "next") {
+            month = get_next_month(month, eventlist);
+            let current_month = init_month(eventlist);
+            day = month.month === current_month.month && month.year === current_month.year
+                ? get_current_date()
+                :1;
+        } else if(action === "prev") {
+            month = get_previous_month(month, eventlist);
+            let current_month = init_month(eventlist);
+            day = month.month === current_month.month && month.year === current_month.year
+                ? get_current_date()
+                :1;
+        } else if (action === "add") {
+            let event = user_add_event();
+            add_event(ht, users, user, event);
+        } else if (action === "logout") {
+            break;
+        } else if (action === "view") {
+            day = user_pick_day(month);
+
+        } else if (action === "edit") {
+            let event = user_select_event(eventlist);
+            if (event) {
+                console.log("Do you want to delete this event? (yes/no)");
+                let confirm_delete = User_input(">", [["yes", "Confirm deletion"], ["no", "Cancel"]]);
+                if (confirm_delete === "yes") {
+                    delete_event(ht, users, user, event);
+                    console.log("Event deleted successfully.");
+                }
+            }
+        }
+    };
+
 };
-
-
 
 function add_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
 	ht_add_event(ht, users, username, event);
