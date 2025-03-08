@@ -46,10 +46,10 @@ export function init_hashtable(): Hashtable {
  *     1) an event is given, and
  *     2) event year/month < current year/month
  * otherwise it will be set to current year/month.
- * @param{Hashtable} ht - hashtable
- * @param{Array<User>} users - array of users
- * @param{string} username - user/username associated with event
- * @param{Event} event (optional) - event to add
+ * @param {Hashtable} ht - hashtable
+ * @param {Array<User>} users - array of users
+ * @param {string} username - user/username associated with event
+ * @param {Event} event (optional) - event to add
  * @precondition if the user exist, event year/month cannot be earlier than the
  *               user's base year/month (base_year/base_month in user's event list)
  * @return {void}
@@ -98,10 +98,10 @@ export function ht_add_event(ht: Hashtable, users: Array<User>, username: string
 /**
  * Delete an event from user's event list.
  * If no event is given, the user, alongside all events associated with the user, will be deleted.
- * @param{Hashtable} ht - hashtable
- * @param{Array<User>} users - array of users
- * @param{string} username - user/username associated with event
- * @param{Event} event (optional) - event to delete
+ * @param {Hashtable} ht - hashtable
+ * @param {Array<User>} users - array of users
+ * @param {string} username - user/username associated with event
+ * @param {Event} event (optional) - event to delete
  * @return {void}
  */
 export function ht_delete_event(ht: Hashtable, users: Array<User>, username: string, event?: Event): void {
