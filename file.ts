@@ -59,7 +59,7 @@ export function write_events_to_file(users: Array<User>, filename: string): numb
 			}
 		}
 		if (no_events)	// user got no events, write no-event line
-			output += '!' + users[u].username; + '\n';
+			output += '!' + users[u].username + '\n';
 	}
 
 	// write (truncate/create file) output to file

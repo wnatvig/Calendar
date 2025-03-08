@@ -30,30 +30,30 @@ while(true) {
     let choice = User_input("> ", [["login", "Log in to your accout"],
                                  ["reg", "Register a new account"],
                                   ["quit", "End the program"]]);
-    if (choice === "quit"){
+    if (choice === "quit") {
         break;
     } else if (choice === "reg") {
-        console.log("What do you want your account name to be?")
+        console.log("What do you want your account name to be?");
         let account: string;
         let account_created = false;
         while (!account_created) {
-            account = pt("> ")
+            account = pt("> ");
             if  (account.includes("\\")) {
-                console.log("Invalid entry: Cannot use \\ in account name")
-                continue
-            } else if (user_exists(ht, account)){
-                console.log("Invalid entry: Usernames must be unique")
-                continue
+                console.log("Invalid entry: Cannot use \\ in account name");
+                continue;
+            } else if (user_exists(ht, account)) {
+                console.log("Invalid entry: Usernames must be unique");
+                continue;
             } else if(account.includes("!")) {
-                console.log("Invalid entry: Cannot use ! in account name")
-                continue
+                console.log("Invalid entry: Cannot use ! in account name");
+                continue;
             } else {
 				user = account;
                 add_user(ht, users, user);
                 account_created = true;
+				start = true;
             }
         }
-
     } else if (choice === "login") {
 		user = pt("Account name: ");
 		if (user_exists(ht, user)) {
@@ -121,9 +121,8 @@ while(true) {
                 }
             }
         }
-    };
-
-};
+    }
+}
 
 function add_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
 	ht_add_event(ht, users, username, event);
