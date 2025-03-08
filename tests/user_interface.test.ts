@@ -58,13 +58,13 @@ describe("display_month", () => {
         };
         const Event_list = { base_year: 2025, base_month:2, events: [[]] };
 
-        display_month(month, Event_list, 1);
+        display_month(month, Event_list, {year: 2025, month: 1, day: 1});
         
         expect(consoleSpy).toHaveBeenCalledWith("          ", "February", 2025);
         expect(consoleSpy).toHaveBeenCalledWith("   Mon Tue Wed Thu Fri Sat Sun");
     });
 
-    it("should correctly highlight days with events", () => {
+    it("should correctly highlight days correctly", () => {
         const event1: Event = {day: 22, 
                        month: 1,
                        year:2025,
@@ -86,10 +86,12 @@ describe("display_month", () => {
                     events_index: 0};
 
         const Event_array1: Event_list = {base_year:2025, base_month:1, events: [[event1, event2]]};
-        display_month(month1, Event_array1, 1);
+        display_month(month1, Event_array1, {year: 2025, month: 1, day: 1});
+
 
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringMatching(/\x1b\[34m5\x1b\[0m/));
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringMatching(/\x1b\[34m22\x1b\[0m/));
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringMatching(/\x1b\[31m1\x1b\[0m/));
     });
 });
 
@@ -136,6 +138,6 @@ describe("Display_next_event", () =>{
         expect(consoleSpy).toHaveBeenCalledWith(`Date: ${NAMES_MONTHS[event1.month]} ${event1.day}, ${event1.year}`);
         expect(consoleSpy).toHaveBeenCalledWith("From: 12:00");
         expect(consoleSpy).toHaveBeenCalledWith("To: 12:00");
-        expect(consoleSpy).toHaveBeenCalledWith("Desciption: Tandläkare");
+        expect(consoleSpy).toHaveBeenCalledWith("Description: Tandläkare");
     });
 });

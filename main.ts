@@ -40,6 +40,9 @@ while(true) {
             } else if (user_exists(ht, account)){
                 console.log("Invalid entry: Usernames must be unique")
                 continue
+            } else if(account.includes("!")) {
+                console.log("Invalid entry: Cannot use ! in account name")
+                continue
             } else {
 				user = account;
                 add_user(ht, users, user);
