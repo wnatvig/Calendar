@@ -30,7 +30,7 @@ describe("display_event", () => {
         expect(consoleSpy).toHaveBeenCalledWith("Date: February 15, 2025");
         expect(consoleSpy).toHaveBeenCalledWith("From: 09:30");
         expect(consoleSpy).toHaveBeenCalledWith("To: 10:45");
-        expect(consoleSpy).toHaveBeenCalledWith("Desciption: Meeting with client");
+        expect(consoleSpy).toHaveBeenCalledWith("Description: Meeting with client");
     });
 });
 

@@ -357,7 +357,7 @@ export function user_select_event(event_list: Event_list): Event | null {
         return null;
     });
 
-    const monthIndex = month - 1;
+    const monthIndex = get_month_index(event_list.base_year,event_list.base_month, year, month);
 
     const date = prompt_for_number("Enter date: ", (num: number) => {
         if (num < 1 || num > month_length(year, monthIndex + 1)) {
@@ -421,7 +421,7 @@ export function parse_event_input(
     //tid
     if (startTime === null) return [null, 4]; //starttid
     if (endTime === null) return [null, 5]; //sluttid
-    if (startTime >= endTime) return [null, 6]; //starttid före sluttid
+    if (startTime > endTime) return [null, 6]; //starttid före sluttid
 
     const event: Event = {
         day: day,
@@ -475,7 +475,7 @@ export function display_event(event: Event):void{
     console.log(`Date: ${NAMES_MONTHS[event.month]} ${event.day}, ${event.year}`);
     console.log(`From: ${start_hour}:${start_minute}`);
     console.log(`To: ${end_hour}:${end_minute}`);
-    console.log(`Desciption: ${event.description}`);
+    console.log(`Description: ${event.description}`);
 }
 
 //display_event(event1);
@@ -520,6 +520,6 @@ export function display_next_event(event_list: Event_list): void {
         console.log("No upcoming events");
     }
 }
-console.log(Eent_array1.events);
-display_next_event(Eent_array1);
+//console.log(Eent_array1.events);
+//display_next_event(Eent_array1);
 //user_add_event(Eent_array1);
