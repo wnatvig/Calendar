@@ -147,7 +147,7 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 		let tokens = tokenize(data, start, end);
 
 		if (tokens.length != 7) {
-			console.log(`invalid data in file '${filename}' at line ${line}:`);
+			console.log(`invalid data in file '${filename}' at line ${line}`);
 			return 2;
 		}
 
@@ -163,7 +163,7 @@ export function add_events_from_file(ht: Hashtable, users: Array<User>, filename
 		if (parsed_event[0] !== null && parsed_event[1] === 0) {
 			ht_add_event(ht, users, tokens[0], parsed_event[0]);
 		} else {
-			console.log(`invalid data in file '${filename}' at line ${line}: parse_event_input returned ${parsed_event[1]}$`);
+			console.log(`invalid data in file '${filename}' at line ${line}: parse_event_input returned ${parsed_event[1]}`);
 			return 2;
 		}
 	}
