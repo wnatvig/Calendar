@@ -421,7 +421,7 @@ export function parse_event_input(
     //tid
     if (startTime === null) return [null, 4]; //starttid
     if (endTime === null) return [null, 5]; //sluttid
-    if (startTime >= endTime) return [null, 6]; //starttid före sluttid
+    if (startTime > endTime) return [null, 6]; //starttid före sluttid
 
     const event: Event = {
         day: day,
