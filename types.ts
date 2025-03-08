@@ -1,5 +1,11 @@
 import type { List, Pair } from './lib/list';
 
+export type Day = {
+	year: number,
+	month: number,
+	day: number,
+};
+
 export type Month = {						//ex.
     year: number,					//2025
     month: number,					//2
