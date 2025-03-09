@@ -66,7 +66,7 @@ export type Event = {
 export type Event_list = {
 	base_year: number,
 	base_month: number,
-	events: Array<Array<Event>>;
+	events: Array<Array<Event>>,
 };
 
 
