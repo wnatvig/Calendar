@@ -96,10 +96,6 @@ while(true) {
                                     ["view", "View a day and all it's events"],
                                     ["logout", "Log out of this user"],
                                     ["next event", "Displays your next event"]];
-        
-        //Need function to view events
-        //Need fuction to fetch specific events (such as next events)
-        //Need function to show all events
         console.log()
         console.log("What action do you want to take?")
         console.log()

@@ -155,30 +155,6 @@ export function user_pick_day(month:Month): number{
     return date;
 }
 
-const event1: Event = {day: 22, 
-                       month: 3,
-                       year:2025,
-                       time_start:1,
-                       time_end: 1,
-                       description: "Tadläkare"};
-
-const event2: Event = {day: 5, 
-                       month: 4,
-                       year:2025,
-                       time_start:1,
-                       time_end: 1,
-                       description: "Tadläkare"};
-const month1: Month= {year: 2025, 
-                    month: 1, 
-                    month_length: 31, 
-                    first_weekday:  3,
-                    week_numbers: [1, 2, 3, 4, 5], 
-                    events_index: 0};
-
-const Eent_array1: Event_list = make_event_list(2025, 1, []);
-
-add_event_to_event_list(event1, Eent_array1);
-add_event_to_event_list(event2, Eent_array1);
 
 
 
@@ -214,8 +190,7 @@ export function User_input(Prompt: string, choices: Choices):string{
     return user_answer;
 };
 
-//Test for user_input
-//console.log(User_input("Enter[y/n]: ",[["y", "yes"], ["n", "no"]]));
+
 
 
 // Helper: Prompt for a number with validation.
@@ -280,7 +255,6 @@ function prompt_for_time(prompt_text: string, min_time: number = 0): number {
         return time;
     }
 }
-//TODO: Maybe add so that you can ad events that are earlier than the days date
 /**
  * Lets the user create an event by presenting them with prompts
  * for year, month, day, start time, end time, and description. 
@@ -555,7 +529,6 @@ export function display_event(event: Event):void{
     console.log(`Description: ${event.description}`);
 }
 
-//display_event(event1);
 /**
  * Finds the next upcoming event from the provided event list.
  * @param {Event_list} event_list - An object containing all events.
@@ -597,6 +570,4 @@ export function display_next_event(event_list: Event_list): void {
         console.log("No upcoming events");
     }
 }
-//console.log(Eent_array1.events);
-//display_next_event(Eent_array1);
-//user_add_event(Eent_array1);
+
