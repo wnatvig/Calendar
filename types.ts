@@ -22,6 +22,7 @@ export type Day = {
 	day: number,
 };
 
+
 /**
  * Stores all information necessary to display a month.
  */
@@ -33,6 +34,7 @@ export type Month = {
     week_numbers: Array<number>,	// weeks that take place during month
     events_index: number,	// index in event list for this specific month
 };
+
 
 /**
  * Stores an event.
@@ -69,26 +71,6 @@ export type Event_list = {
 
 
 /**
- * Hashtable for user lookup.
- *
- * Perform a user lookup in a hashtable ht with:
- *     ht.table[ht.hash(username) % ht.table_size]
- * This will be a list of entries (collisions).
- * Each entry is a Pair<string, number> that consists of:
- *     [0] {string} - key
- *     [1] {number} - value
- *
- * The key will be the username and the value will
- * be an index in an Array<User>, thereby leading
- * to a User.
- */
-export type Hashtable = {
-	table: Array<List<Pair<string, number>>>,
-	table_size: number,	// size of table array (number of elements/lists)
-	hash: (key: string) => number,	// hash function
-};
-
-/**
  * Store all necessary information about a user.
  *
  * In main, all events and users are stored in an Array<User>.
@@ -96,4 +78,29 @@ export type Hashtable = {
 export type User = {
 	username: string,
 	eventlist: Event_list,	// list of events associated with user
-}
+};
+
+
+/**
+ * Used as entry type in hashtable for users.
+ * 
+ * The Pair consists of:
+ *     [0] {string} - key (username)
+ *     [1] {number} - value (Array<User> index)
+ */
+export type User_HT_entry = Pair<string, number>;
+
+
+/**
+ * Hashtable for user lookup.
+ *
+ * Perform a lookup in a hashtable ht with:
+ *     ht.table[ht.hash(key) % ht.table_size]
+ * This will be a list of entries (collisions) of type User_HT_entry.
+ */
+export type Hashtable = {
+	table: Array<List<User_HT_entry>>,
+	table_size: number,	// size of table array (number of elements/lists)
+	hash: (key: string) => number,	// hash function
+};
+

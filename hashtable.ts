@@ -1,5 +1,5 @@
 import type { List, Pair } from './lib/list';
-import type { Event, Event_list, Hashtable, User } from './types';
+import type { Event, Event_list, User, User_HT_entry, Hashtable } from './types';
 import { pair, head, tail, is_null, remove } from './lib/list';
 
 import { get_current_year, get_current_month } from './time_date';
@@ -56,7 +56,7 @@ export function init_hashtable(): Hashtable {
  */
 export function ht_add_event(ht: Hashtable, users: Array<User>, username: string, event?: Event): void {
 	let ht_i = ht.hash(username) % ht.table_size;
-	let user_list: List<Pair<string, number>>;
+	let user_list: List<User_HT_entry>;
 	let user_i;
 
 	for (user_list = ht.table[ht_i]; !is_null(user_list); user_list = tail(user_list))
@@ -106,7 +106,7 @@ export function ht_add_event(ht: Hashtable, users: Array<User>, username: string
  */
 export function ht_delete_event(ht: Hashtable, users: Array<User>, username: string, event?: Event): void {
 	let ht_i = ht.hash(username) % ht.table_size;
-	let user_list: List<Pair<string, number>>;
+	let user_list: List<User_HT_entry>;
 	let user_i;
 
 	for (user_list = ht.table[ht_i]; !is_null(user_list); user_list = tail(user_list))
@@ -136,7 +136,7 @@ export function ht_delete_event(ht: Hashtable, users: Array<User>, username: str
  * @return {boolean} - returns true if entry exists, otherwise false
  */
 export function ht_entry_exists(ht: Hashtable, key: string): boolean {
-	let lst: List<Pair<string, number>>;
+	let lst: List<User_HT_entry>;
 	let ht_i = ht.hash(key) % ht.table_size;
 
 	for (lst = ht.table[ht_i]; !is_null(lst); lst = tail(lst)) {
@@ -158,8 +158,9 @@ export function ht_entry_exists(ht: Hashtable, key: string): boolean {
  *     null: if user was not found in hashtable
  */
 export function ht_get_event_list(ht: Hashtable, users: Array<User>, user: string): Event_list | null {
-	let lst = ht.table[ht.hash(user) % ht.table_size]
+	let lst: List<User_HT_entry> = ht.table[ht.hash(user) % ht.table_size]
 	let user_index = -1;
+
 	for (; !is_null(lst); lst = tail(lst)) {
 		if (head(head(lst)) === user) {
 			user_index = tail(head(lst)); 
