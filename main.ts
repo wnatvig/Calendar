@@ -80,22 +80,27 @@ while(true) {
 		//console.log('\x1bc');
 
         display_month(month, eventlist, selected_day);
+        if(next_event){
+            console.log();
+            display_next_event(eventlist);
+            console.log();
+            next_event = false;
+        } else {}
+
 		if (month.year === selected_day.year && month.month === selected_day.month){
 			display_day(eventlist, month, selected_day.day);
         } else {}
 
-        if(next_event){
-            display_next_event(eventlist);
-            next_event = false;
-        } else {}
+
 
         const actions_list: Choices = [["next", "Displays the next month"],
                                     ["prev", "Display the previous month"],
                                     ["add", "Add an event to the calendar"],
                                     ["edit", "Edit an event"],
                                     ["view", "View a day and all it's events"],
-                                    ["logout", "Log out of this user"],
-                                    ["next event", "Displays your next event"]];
+                                    ["next event", "Displays your next event"],
+                                    ["logout", "Log out of this user"]
+                                    ];
         console.log()
         console.log("What action do you want to take?")
         console.log()

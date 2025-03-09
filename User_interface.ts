@@ -541,15 +541,23 @@ export function find_next_event(event_list: Event_list): Event | null {
                                       get_current_month());
     let evs = event_list.events;
 
+    if (month_index < 0 || month_index >= evs.length) {
+        return null;
+    }
+
     for (let i = month_index; i < evs.length; i++) {
+        if (!evs[i] || evs[i].length === 0) continue;
+
+        // Sort events by day and time_start within each month
+        evs[i].sort((a, b) => a.day !== b.day ? a.day - b.day : a.time_start - b.time_start);
+
         for (let ev of evs[i]) {
             if (i === month_index) {
-                // For the current month, only consider events on or after today
+                // Only consider events today or later
                 if (ev.day >= get_current_date()) {
                     return ev;
                 }
             } else {
-                // For future months, take the first event
                 return ev;
             }
         }
