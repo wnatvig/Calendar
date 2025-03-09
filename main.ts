@@ -1,9 +1,12 @@
 import type { Day, Month, Event, Event_list, Hashtable, User } from './types';
-import { Choices, display_day, display_month, display_next_event, user_add_event, User_input, user_pick_day, user_select_event, edit_event } from './User_interface';
+import { Choices, display_day, display_month, display_next_event, user_add_event, 
+        User_input, user_pick_day, user_select_event, edit_event } from './User_interface';
 import { init_month, get_next_month, get_previous_month } from './month';
 import { get_current_year, get_current_month, get_current_date } from './time_date';
-import { init_hashtable, ht_add_event, ht_delete_event, ht_entry_exists, ht_get_event_list } from './hashtable';
-import { append_event_to_file, add_events_from_file, write_events_to_file } from './file';
+import { init_hashtable, add_user,add_event, user_exists, get_event_list, 
+        delete_event} from './hashtable';
+import { add_events_from_file} from './file';
+
 
 const DATA_FILENAME = "data";
 const pt = require('prompt-sync')();
@@ -41,7 +44,7 @@ while(true) {
             if  (account.includes("\\")) {
                 console.log("Invalid entry: Cannot use \\ in account name");
                 continue;
-            } else if (user_exists(ht, account)) {
+            } else if (user_exists(ht, account, DATA_FILENAME)) {
                 console.log("Invalid entry: Usernames must be unique");
                 continue;
             } else if(account.includes("!")) {
@@ -49,14 +52,14 @@ while(true) {
                 continue;
             } else {
 				user = account;
-                add_user(ht, users, user);
+                add_user(ht, users, user, DATA_FILENAME);
                 account_created = true;
 				start = true;
             }
         }
     } else if (choice === "login") {
 		user = pt("Account name: ");
-		if (user_exists(ht, user)) {
+		if (user_exists(ht, user, DATA_FILENAME)) {
 			start = true;
 		} else {
 			console.log(`Could not find user '${user}'`);
@@ -66,7 +69,7 @@ while(true) {
     }
 
 	selected_day = {year: get_current_year(), month: get_current_month(), day: get_current_date()};
-	eventlist = get_event_list(ht, users, user)!;
+	eventlist = get_event_list(ht, users, user, DATA_FILENAME)!;
 	month = init_month(eventlist);
     let next_event = false;
     while (start) {
@@ -109,7 +112,7 @@ while(true) {
             let current_month = init_month(eventlist);
         } else if (action === "add") {
             let event = user_add_event();
-            add_event(ht, users, user, event);
+            add_event(ht, users, user, event, DATA_FILENAME);
         } else if (action === "logout") {
 			welcome_prompt = true;
             break;
@@ -128,101 +131,15 @@ while(true) {
                 ]);
         
                 if (action_choice === "delete") {
-                    delete_event(ht, users, user, event);
+                    delete_event(ht, users, user, event, DATA_FILENAME);
                     console.log("bort yes.");
                 } else if (action_choice === "edit") {
-                    edit_event(ht, users, user, eventlist, event);
+                    edit_event(ht, users, user, eventlist, event, DATA_FILENAME);
                 }
             }
         } else if(action === "next event") {
             next_event = true;
         } else {}
     }
-}
-
-/**
- * Add event.
- * Updates data structures and writes changes to file.
- * If the specified user does not exist the user is created.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user to be associated with event
- * @param {Event} event - event to add
- * @return {void}
- */
-export function add_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
-	ht_add_event(ht, users, username, event);
-	//append_event_to_file(event, username, DATA_FILENAME);	//not in use due to potential bug, see comment in file.ts
-	if (write_events_to_file(users, DATA_FILENAME))
-		console.log("write_events_to_file returned 1");
-}
-
-/**
- * Add new user.
- * Updates data structures and writes changes to file.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user to be added
- * @return {void}
- */
-function add_user(ht: Hashtable, users: Array<User>, username: string): void {
-	ht_add_event(ht, users, username);
-	if (write_events_to_file(users, DATA_FILENAME))	// users with no events are still saved in file
-		console.log("write_events_to_file returned 1");
-}
-
-/**
- * Checks whether or not a user exists in hashtable.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {string} username - user to look for
- * @return {boolean} - returns:
- *     true: user exists
- *     false: user does not exist
- */
-function user_exists(ht: Hashtable, username: string): boolean {
-	return ht_entry_exists(ht, username);
-}
-
-/**
- * Retrieve the event list associated with a user.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user's username
- * @return {Event_list | null} - returns:
- *     Event_list: user's event list
- *     null: if user was not found in hashtable
- */
-function get_event_list(ht: Hashtable, users: Array<User>, username: string): Event_list | null {
-	return ht_get_event_list(ht, users, username);
-}
-
-/**
- * Delete an event.
- * Updates data structures and writes changes to file.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user associated with event
- * @param {Event} event - event to delete
- * @return {void}
- */
-export function delete_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
-	ht_delete_event(ht, users, username, event);
-	if (write_events_to_file(users, DATA_FILENAME))
-		console.log("write_events_to_file returned 1");
-
-}
-
-/**
- * Delete a user and all events associated with that user.
- * Updates data structures and writes changes to file.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user
- * @return {void}
- */
-function delete_user(ht: Hashtable, users: Array<User>, username: string): void {
-	ht_delete_event(ht, users, username);
-	if (write_events_to_file(users, DATA_FILENAME))
-		console.log("write_events_to_file returned 1");
 }
 
