@@ -9,7 +9,7 @@ export type Day = {
 export type Month = {						//ex.
     year: number,					//2025
     month: number,					//2
-    month_length: number			//28
+    month_length: number,			//28
     first_weekday: number,			//6
     week_numbers: Array<number>,	//[5, 6, 7, 8, 9]
     events_index: number,
