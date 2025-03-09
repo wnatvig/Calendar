@@ -394,7 +394,22 @@ export function user_select_event(event_list: Event_list): Event | null {
 
     return events_on_date[event_index - 1];
 }
-
+/**
+ * 
+ * @param dayStr - the day of the event as a string
+ * @param monthStr - the month of the event as a string
+ * @param yearStr - the year of the event as a string
+ * @param startTimeStr - the start time of the event as a string (example: "10:00")
+ * @param endTimeStr - the end time of the event as a string (example: "11:00")
+ * @param description - the description of the event
+ * @returns an array with the  event and 0 if correctly parsed,
+ *          an array with null and 1 if year is not a number,
+ *          an array with null and 2 if month is outside of range
+ *          an array with null and 3 if day is outside of range
+ *          an array with null and 4 if not valid start time
+ *          an array with null and 5 id not valid end time
+ *          an array with null and 6 if end time is before start time
+ */
 export function parse_event_input(
     dayStr: string,
     monthStr: string,
@@ -435,7 +450,16 @@ export function parse_event_input(
 
     return [event, 0]; //nummer 0 vilket betyder korrekt
 }
-
+ /**
+  * Edits an event by asking user for details
+  * and then deleting the old one and creating the new one.
+  * @param ht - the hashtable storing users and its events
+  * @param users - the array of users
+  * @param username - the name of the user whos event is being edited
+  * @param event_list - the users list of events
+  * @param old_event - the event to be edited
+  * @returns it changes the Event_list but returns void
+  */
 export function edit_event(ht: Hashtable, users: Array<User>, username: string, event_list: Event_list, old_event: Event): void {
     console.log("Enter new details for the event.");
 
@@ -483,7 +507,11 @@ export function edit_event(ht: Hashtable, users: Array<User>, username: string, 
 
     console.log("event did edited.");
 }
-
+/**
+ * it correctly parses string versions of time
+ * @param timeStr - a string representing either the start or end time of the event (example: "13:20")
+ * @returns the time but as a number instead of string (example: "10:00" => 1000)
+ */
 function parse_time(timeStr: string): number | null {
     const parts = timeStr.split(":");
     if (parts.length !== 2) return null;
