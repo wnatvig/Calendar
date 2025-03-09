@@ -1,5 +1,5 @@
 import type { Day, Month, Event, Event_list, Hashtable, User } from './types';
-import { Choices, display_day, display_month, user_add_event, User_input, user_pick_day, user_select_event } from './User_interface';
+import { Choices, display_day, display_month, user_add_event, User_input, user_pick_day, user_select_event, edit_event } from './User_interface';
 import { init_month, get_next_month, get_previous_month } from './month';
 import { get_current_year, get_current_month, get_current_date } from './time_date';
 import { init_hashtable, ht_add_event, ht_delete_event, ht_entry_exists, ht_get_event_list } from './hashtable';
@@ -113,11 +113,18 @@ while(true) {
         } else if (action === "edit") {
             let event = user_select_event(eventlist);
             if (event) {
-                console.log("Do you want to delete this event? (yes/no)");
-                let confirm_delete = User_input("> ", [["yes", "Confirm deletion"], ["no", "Cancel"]]);
-                if (confirm_delete === "yes") {
+                console.log("Do you want to delete or edit this event?");
+                let action_choice = User_input("> ", [
+                    ["delete", "Delete the event"],
+                    ["edit", "Edit the event"],
+                    ["cancel", "Cancel"]
+                ]);
+        
+                if (action_choice === "delete") {
                     delete_event(ht, users, user, event);
-                    console.log("Event deleted successfully.");
+                    console.log("bort yes.");
+                } else if (action_choice === "edit") {
+                    edit_event(ht, users, user, eventlist, event);
                 }
             }
         }
@@ -134,7 +141,7 @@ while(true) {
  * @param {Event} event - event to add
  * @return {void}
  */
-function add_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
+export function add_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
 	ht_add_event(ht, users, username, event);
 	//append_event_to_file(event, username, DATA_FILENAME);	//not in use due to potential bug, see comment in file.ts
 	if (write_events_to_file(users, DATA_FILENAME))
@@ -189,7 +196,7 @@ function get_event_list(ht: Hashtable, users: Array<User>, username: string): Ev
  * @param {Event} event - event to delete
  * @return {void}
  */
-function delete_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
+export function delete_event(ht: Hashtable, users: Array<User>, username: string, event: Event): void {
 	ht_delete_event(ht, users, username, event);
 	if (write_events_to_file(users, DATA_FILENAME))
 		console.log("write_events_to_file returned 1");
@@ -209,3 +216,4 @@ function delete_user(ht: Hashtable, users: Array<User>, username: string): void 
 	if (write_events_to_file(users, DATA_FILENAME))
 		console.log("write_events_to_file returned 1");
 }
+

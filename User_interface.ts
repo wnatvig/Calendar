@@ -1,8 +1,9 @@
 import { NAMES_MONTHS, NAMES_WEEKDAYS } from "./defs";
-import { Day, Month, Event_list, Event} from "./types";
+import { Day, Month, Event_list, Event, Hashtable, User } from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
 import { add_event_to_event_list, make_event, make_event_list } from "./events";
 import { get_month_index, init_month, month_length } from "./month";
+import { delete_event, add_event } from "./main";
 
 
 //Makes an array with all the dates in the right place so it can be divided
@@ -433,6 +434,54 @@ export function parse_event_input(
     };
 
     return [event, 0]; //nummer 0 vilket betyder korrekt
+}
+
+export function edit_event(ht: Hashtable, users: Array<User>, username: string, event_list: Event_list, old_event: Event): void {
+    console.log("Enter new details for the event.");
+
+    const pt = require('prompt-sync')();
+    
+    const new_year = prompt_for_number("Enter new year: ", (num: number) => {
+        return num < event_list.base_year ? "Invalid entry: Too early year" : null;
+    });
+    
+    const new_month = prompt_for_number("Enter new month: ", (num: number) => {
+        if (num < 1 || num > 12) {
+            return "Invalid entry: Month must be between 1 and 12";
+        }
+        return null;
+    });
+
+    const new_day = prompt_for_number("Enter new day: ", (num: number) => {
+        if (num < 1 || num > month_length(old_event.year, old_event.month)) {
+            return `Invalid entry: Month ${old_event.month} only has ${month_length(old_event.year, old_event.month)} days`;
+        }
+        return null;
+    });
+
+    const new_start_time = parse_time(pt("Enter new start time: "));
+    const new_end_time = parse_time(pt("Enter new end time: "));
+
+    if (new_start_time === null || new_end_time === null || new_start_time > new_end_time) {
+        console.log("Invalid time input. Start time must be before end time.");
+        return;
+    }
+
+    const new_description = pt("Enter new description: ");
+
+    const new_event: Event = {
+        day: new_day,
+        month: new_month,
+        year: new_year,
+        time_start: new_start_time,
+        time_end: new_end_time,
+        description: new_description
+    };
+
+    delete_event(ht, users, username, old_event);
+    add_event(ht, users, username, new_event);
+
+    console.log("event did edited.");
 }
 
 function parse_time(timeStr: string): number | null {
