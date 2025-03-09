@@ -1,5 +1,5 @@
 import type { Day, Month, Event, Event_list, Hashtable, User } from './types';
-import { Choices, display_day, display_month, user_add_event, User_input, user_pick_day, user_select_event } from './User_interface';
+import { Choices, display_day, display_month, display_next_event, user_add_event, User_input, user_pick_day, user_select_event } from './User_interface';
 import { init_month, get_next_month, get_previous_month } from './month';
 import { get_current_year, get_current_month, get_current_date } from './time_date';
 import { init_hashtable, ht_add_event, ht_delete_event, ht_entry_exists, ht_get_event_list } from './hashtable';
@@ -68,7 +68,7 @@ while(true) {
 	selected_day = {year: get_current_year(), month: get_current_month(), day: get_current_date()};
 	eventlist = get_event_list(ht, users, user)!;
 	month = init_month(eventlist);
-
+    let next_event = false;
     while (start) {
 		//clear
 		for (let i = 0; i < 100; i++){
@@ -77,15 +77,22 @@ while(true) {
 		//console.log('\x1bc');
 
         display_month(month, eventlist, selected_day);
-		if (month.year === selected_day.year && month.month === selected_day.month)
+		if (month.year === selected_day.year && month.month === selected_day.month){
 			display_day(eventlist, month, selected_day.day);
+        } else {}
+
+        if(next_event){
+            display_next_event(eventlist);
+            next_event = false;
+        } else {}
 
         const actions_list: Choices = [["next", "Displays the next month"],
                                     ["prev", "Display the previous month"],
                                     ["add", "Add an event to the calendar"],
                                     ["edit", "Edit an event"],
                                     ["view", "View a day and all it's events"],
-                                    ["logout", "Log out of this user"]];
+                                    ["logout", "Log out of this user"],
+                                    ["next event", "Displays your next event"]];
         
         //Need function to view events
         //Need fuction to fetch specific events (such as next events)
@@ -120,7 +127,9 @@ while(true) {
                     console.log("Event deleted successfully.");
                 }
             }
-        }
+        } else if(action === "next event") {
+            next_event = true;
+        } else {}
     }
 }
 
