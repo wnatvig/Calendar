@@ -2,7 +2,12 @@ import { NAMES_MONTHS } from "../defs";
 import { add_event_to_event_list, make_event, make_event_list } from "../events";
 import { get_current_date, get_current_month, get_current_year } from "../time_date";
 import { Event, Event_list, Month } from "../types";
-import { display_event, display_month, display_next_event} from "../User_interface";
+import { display_event, display_month, display_next_event,  
+    display_day, 
+    parse_event_input, 
+    parse_time, 
+    find_next_event 
+} from "../User_interface";
 
 describe("display_event", () => {
     let consoleSpy:jest.SpyInstance;
@@ -139,5 +144,121 @@ describe("Display_next_event", () =>{
         expect(consoleSpy).toHaveBeenCalledWith("From: 12:00");
         expect(consoleSpy).toHaveBeenCalledWith("To: 12:00");
         expect(consoleSpy).toHaveBeenCalledWith("Description: Tandläkare");
+    });
+});
+
+describe("Parse_time", () => {
+
+    test("returns correct numeric time for valid input", () => {
+        expect(parse_time("10:30")).toBe(1030);
+        expect(parse_time("00:05")).toBe(5);
+        expect(parse_time("23:59")).toBe(2359);
+    });
+
+    test("returns null for invalid time strings", () => {
+        expect(parse_time("24:00")).toBeNull();
+        expect(parse_time("12:60")).toBeNull();
+        expect(parse_time("invalid")).toBeNull();
+        expect(parse_time("12")).toBeNull();
+    }); 
+});
+
+describe("parse_event_input", () => {
+    test("returns error code 1 when year is not a number", () => {
+        const [ev, code] = parse_event_input("10", "5", "NaN", "10:00", "11:00", "Test");
+        expect(ev).toBeNull();
+        expect(code).toBe(1);
+    });
+    
+    test("returns error code 2 for an invalid month", () => {
+        const [ev, code] = parse_event_input("10", "13", "2025", "10:00", "11:00", "Test");
+        expect(ev).toBeNull();
+        expect(code).toBe(2);
+    });
+    
+    test("returns error code 3 for an invalid day", () => {
+        // For February 2025, month_length(2025,2) should be 28.
+        const [ev, code] = parse_event_input("30", "2", "2025", "10:00", "11:00", "Test");
+        expect(ev).toBeNull();
+        expect(code).toBe(3);
+    });
+    
+    test("returns error code 4 for an invalid start time", () => {
+        const [ev, code] = parse_event_input("10", "5", "2025", "25:00", "11:00", "Test");
+        expect(ev).toBeNull();
+        expect(code).toBe(4);
+    });
+    
+    test("returns error code 5 for an invalid end time", () => {
+        const [ev, code] = parse_event_input("10", "5", "2025", "10:00", "11:60", "Test");
+        expect(ev).toBeNull();
+        expect(code).toBe(5);
+    });
+    
+    test("returns error code 6 when end time is before start time", () => {
+        const [ev, code] = parse_event_input("10", "5", "2025", "11:00", "10:00", "Test");
+        expect(ev).toBeNull();
+        expect(code).toBe(6);
+    });
+    
+    test("returns event and code 0 for valid input", () => {
+        const [ev, code] = parse_event_input("10", "5", "2025", "10:00", "11:00", "Test");
+        expect(code).toBe(0);
+        expect(ev).not.toBeNull();
+        if (ev) {
+            expect(ev.day).toBe(10);
+            expect(ev.month).toBe(5);
+            expect(ev.year).toBe(2025);
+            expect(ev.time_start).toBe(1000);
+            expect(ev.time_end).toBe(1100);
+            expect(ev.description).toBe("Test");
+        }
+    });
+    
+
+})
+describe("display_day", () => {
+    test("prints no events message when there are no events", () => {
+        // Create a fake event list with no events for the month index.
+        const eventList: Event_list = { base_year: 2025, base_month: 1, events: [] };
+        const fakeMonth: Month = {
+            year: 2025,
+            month: 1,
+            month_length: 31,
+            first_weekday: 1,
+            week_numbers: [1, 2, 3, 4, 5],
+            events_index: 0
+        };
+        const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        display_day(eventList, fakeMonth, 15);
+        // Check that the header and "no events" message are printed.
+        expect(consoleSpy).toHaveBeenCalledWith(`All events for ${NAMES_MONTHS[fakeMonth.month]} 15:`);
+        expect(consoleSpy).toHaveBeenCalledWith("Seems you have no events this day");
+        consoleSpy.mockRestore();
+    });
+})
+
+describe("find_next_event", ()=> {
+    test("find_next_event returns the correct upcoming event", () => {
+        // Use the current date information.
+        const currentYear = get_current_year();
+        const currentMonth = get_current_month();
+        const currentDate = get_current_date();
+        const eventList: Event_list = make_event_list(currentYear, currentMonth, []);
+        const futureEvent = make_event(currentDate + 1, currentMonth, currentYear, 900, 1000, "Future");
+        // Ensure the events array exists for the current month index (index 0).
+        eventList.events[0] = [futureEvent];
+        const nextEv = find_next_event(eventList);
+        expect(nextEv).toEqual(futureEvent);
+    });
+    
+    test("find_next_event returns null if no upcoming event is found", () => {
+        const currentYear = get_current_year();
+        const currentMonth = get_current_month();
+        const eventList: Event_list = make_event_list(currentYear, currentMonth, []);
+        // Set an empty events array for the current month.
+        eventList.events[0] = [];
+        const nextEv = find_next_event(eventList);
+        expect(nextEv).toBeNull();
     });
 });

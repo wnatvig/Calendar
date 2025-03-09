@@ -486,7 +486,7 @@ export function edit_event(ht: Hashtable, users: Array<User>, username: string, 
  * @param timeStr - a string representing either the start or end time of the event (example: "13:20")
  * @returns the time but as a number instead of string (example: "10:00" => 1000)
  */
-function parse_time(timeStr: string): number | null {
+export function parse_time(timeStr: string): number | null {
     const parts = timeStr.split(":");
     if (parts.length !== 2) return null;
     

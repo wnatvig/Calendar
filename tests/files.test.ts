@@ -74,4 +74,20 @@ describe("File Operations", () => {
 
         expect(result).toBe(0);
     });
+
+    test("add_events_from_file should handle a user with no events", () => {
+        // Create input representing a user with no events.
+        const mockData = "!user2\n";
+        jest.spyOn(fs, "readFileSync").mockReturnValue(mockData);
+
+        // Create a fresh hashtable and users array.
+        const localHT = init_hashtable();
+        const localUsers: Array<User> = [];
+
+        const result = add_events_from_file(localHT, localUsers, filename);
+        expect(result).toBe(0);
+        // Check that user2 has been added.
+        const user2 = localUsers.find(u => u.username === "user2");
+        expect(user2).toBeDefined();
+    });
 });

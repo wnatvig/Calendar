@@ -78,6 +78,7 @@ export function delete_event_from_event_list(event: Event, event_list: Event_lis
 	if (event_list.events[month_index] === undefined)	//event does not exist in eventlist
 		return 2;
 
+	let found = false;
 	let e: Event;
 	for (let i = 0; i < event_list.events[month_index].length; i++) {
 		e = event_list.events[month_index][i];
@@ -87,11 +88,12 @@ export function delete_event_from_event_list(event: Event, event_list: Event_lis
 			e.time_start === event.time_start &&
 			e.time_end === event.time_end &&
 			e.description === event.description) {
-
+			
 			event_list.events[month_index].splice(i, 1);	//remove event at index i
 			break;
+			found = true;
 		}
 	}
 
-	return 0;
+	return found ? 0: 2;
 }
