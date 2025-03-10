@@ -89,9 +89,10 @@ export function delete_event_from_event_list(event: Event, event_list: Event_lis
 			e.time_end === event.time_end &&
 			e.description === event.description) {
 			
+			found = true;
 			event_list.events[month_index].splice(i, 1);	//remove event at index i
 			break;
-			found = true;
+			
 		}
 	}
 
