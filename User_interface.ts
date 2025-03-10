@@ -573,6 +573,8 @@ export function find_next_event(event_list: Event_list): Event | null {
 export function display_next_event(event_list: Event_list): void {
     const nextEvent = find_next_event(event_list);
     if (nextEvent !== null) {
+        console.log("Your next upcoming event is:")
+        console.log()
         display_event(nextEvent);
     } else {
         console.log("No upcoming events");
