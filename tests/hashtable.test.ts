@@ -9,7 +9,6 @@ import {
 import { get_current_date, get_current_month, get_current_year } from "../time_date";
 import { Hashtable, User } from "../types";
 import { find_next_event } from "../User_interface";
-import * as fileModule from "../file";
 
 describe("Hash_init", () => {
     it("should produce an array of length hash.table_size", () => {
