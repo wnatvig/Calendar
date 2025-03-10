@@ -1,11 +1,8 @@
 import { make_event, make_event_list, add_event_to_event_list, 
     delete_event_from_event_list 
 } from "../events";
-import { 
-    init_hashtable, ht_add_event, ht_delete_event, ht_entry_exists, 
-    ht_get_event_list, add_event, add_user, user_exists, get_event_list, 
-    delete_event, delete_user 
-} from "../hashtable";
+import { ht_add_event, ht_delete_event, ht_entry_exists, ht_get_event_list } from "../hashtable";
+import { init_hashtable } from '../backend';
 import { get_current_date, get_current_month, get_current_year } from "../time_date";
 import { Hashtable, User } from "../types";
 import { find_next_event } from "../User_interface";

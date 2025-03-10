@@ -3,7 +3,7 @@ import { Day, Month, Event_list, Event, Hashtable, User } from "./types";
 import { get_current_date, get_current_month, get_current_weekday, get_current_year } from "./time_date";
 import { add_event_to_event_list, make_event, make_event_list } from "./events";
 import { get_month_index, init_month, month_length } from "./month";
-import { add_event, delete_event } from "./hashtable";
+import { add_event, delete_event } from "./backend";
 
 
 //Makes an array with all the dates in the right place so it can be divided
@@ -434,7 +434,7 @@ export function parse_event_input(
   * @param old_event - the event to be edited
   * @returns it changes the Event_list but returns void
   */
-export function edit_event(ht: Hashtable, users: Array<User>, username: string, event_list: Event_list, old_event: Event, DATA_FILENAME:string): void {
+export function edit_event(ht: Hashtable, users: Array<User>, username: string, event_list: Event_list, old_event: Event): void {
     console.log("Enter new details for the event.");
 
     const pt = require('prompt-sync')();
@@ -476,8 +476,8 @@ export function edit_event(ht: Hashtable, users: Array<User>, username: string, 
         description: new_description
     };
 
-    delete_event(ht, users, username, old_event, DATA_FILENAME);
-    add_event(ht, users, username, new_event, DATA_FILENAME);
+    delete_event(ht, users, username, old_event);
+    add_event(ht, users, username, new_event);
 
     console.log("event did edited.");
 }

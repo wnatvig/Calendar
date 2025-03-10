@@ -3,6 +3,7 @@ import type { Event, Event_list, Hashtable, User } from './types';
 import { ht_add_event } from './hashtable';
 import { parse_event_input } from './User_interface';
 
+export const DATA_FILENAME = "data";
 
 /* STORING EVENTS ON THE SYSTEM
  * All events, for all users, can be stored in a file.

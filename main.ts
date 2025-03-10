@@ -3,19 +3,17 @@ import { Choices, display_day, display_month, display_next_event, user_add_event
         User_input, user_pick_day, user_select_event, edit_event } from './User_interface';
 import { init_month, get_next_month, get_previous_month } from './month';
 import { get_current_year, get_current_month, get_current_date } from './time_date';
-import { init_hashtable, add_user,add_event, user_exists, get_event_list, 
-        delete_event} from './hashtable';
-import { add_events_from_file} from './file';
+import { init_hashtable, load_events, add_event, add_user, user_exists,
+         get_event_list, delete_event, delete_user } from './backend';
 
 
-const DATA_FILENAME = "data";
 const pt = require('prompt-sync')();
 
 //creates the hashtable and array of users and then fills them with all the data
 //we have on them
 let ht: Hashtable = init_hashtable();
 let users: Array<User> = [];
-add_events_from_file(ht, users, DATA_FILENAME);
+load_events(ht, users);
 
 let user: string = "";
 let eventlist: Event_list;
@@ -44,7 +42,7 @@ while(true) {
             if  (account.includes("\\")) {
                 console.log("Invalid entry: Cannot use \\ in account name");
                 continue;
-            } else if (user_exists(ht, account, DATA_FILENAME)) {
+            } else if (user_exists(ht, account)) {
                 console.log("Invalid entry: Usernames must be unique");
                 continue;
             } else if(account.includes("!")) {
@@ -52,14 +50,14 @@ while(true) {
                 continue;
             } else {
 				user = account;
-                add_user(ht, users, user, DATA_FILENAME);
+                add_user(ht, users, user);
                 account_created = true;
 				start = true;
             }
         }
     } else if (choice === "login") {
 		user = pt("Account name: ");
-		if (user_exists(ht, user, DATA_FILENAME)) {
+		if (user_exists(ht, user)) {
 			start = true;
 		} else {
 			console.log(`Could not find user '${user}'`);
@@ -69,7 +67,7 @@ while(true) {
     }
 
 	selected_day = {year: get_current_year(), month: get_current_month(), day: get_current_date()};
-	eventlist = get_event_list(ht, users, user, DATA_FILENAME)!;
+	eventlist = get_event_list(ht, users, user)!;
 	month = init_month(eventlist);
     let next_event = false;
     while (start) {
@@ -113,7 +111,7 @@ while(true) {
             let current_month = init_month(eventlist);
         } else if (action === "add") {
             let event = user_add_event();
-            add_event(ht, users, user, event, DATA_FILENAME);
+            add_event(ht, users, user, event);
         } else if (action === "logout") {
 			welcome_prompt = true;
             break;
@@ -132,10 +130,10 @@ while(true) {
                 ]);
         
                 if (action_choice === "delete") {
-                    delete_event(ht, users, user, event, DATA_FILENAME);
+                    delete_event(ht, users, user, event);
                     console.log("bort yes.");
                 } else if (action_choice === "edit") {
-                    edit_event(ht, users, user, eventlist, event, DATA_FILENAME);
+                    edit_event(ht, users, user, eventlist, event);
                 }
             }
         } else if(action === "next event") {

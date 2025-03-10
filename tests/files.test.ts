@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 import { write_events_to_file, append_event_to_file, add_events_from_file } from '../file'; // Adjust path
 import type { Event, Event_list, Hashtable, User } from '../types';
-import { ht_add_event, init_hashtable } from '../hashtable';
+import { ht_add_event } from '../hashtable';
+import { init_hashtable } from '../backend';
 
 // Mock the fs module to avoid real file operations
 jest.mock('fs');

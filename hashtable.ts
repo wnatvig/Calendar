@@ -9,8 +9,8 @@ import { make_event_list, add_event_to_event_list, delete_event_from_event_list 
 // in documentation 'year/month' is referring to a specific month, denoted by year and month (1 - 12)
 
 
-const HT_TABLE_SIZE: number = 100;
-const HT_HASH_FUNCTION: (key: string) => number = simple_hash;
+export const HT_TABLE_SIZE: number = 100;
+export const HT_HASH_FUNCTION: (key: string) => number = simple_hash;
 
 //from pkd lecture 9A
 function simple_hash(str: string): number {
@@ -23,13 +23,14 @@ function simple_hash(str: string): number {
 }
 
 /**
- * Initialize hashtable,
- * table size will be set to HT_TABLE_SIZE and the hash function to HT_HASH_FUNCTION.
- * @precondition global constant HT_TABLE_SIZE >= 1
+ * Initialize hashtable.
+ * @param {number} table_size - length of table array
+ * @param {(key:string) => number} hash_fn - hash function, maps string to index
+ * @precondition table_size >= 1
  * @return {Hashtable} - returns hashtable
  */
-export function init_hashtable(): Hashtable {
-	let ht: Hashtable = {table: [], table_size: HT_TABLE_SIZE, hash: HT_HASH_FUNCTION};
+export function ht_init(table_size: number, hash_fn: (key: string) => number): Hashtable {
+	let ht: Hashtable = {table: [], table_size: table_size, hash: hash_fn};
 
 	for (let i = 0; i < ht.table_size; i++)
 		ht.table[i] = null;
@@ -171,91 +172,4 @@ export function ht_get_event_list(ht: Hashtable, users: Array<User>, user: strin
 		null;
 
 	return users[user_index].eventlist;
-}
-
-//
-/**
- * Add event.
- * Updates data structures and writes changes to file.
- * If the specified user does not exist the user is created.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user to be associated with event
- * @param {Event} event - event to add
- * @return {void}
- */
-export function add_event(ht: Hashtable, users: Array<User>, username: string, event: Event, DATA_FILENAME:string): void {
-	ht_add_event(ht, users, username, event);
-	//append_event_to_file(event, username, DATA_FILENAME);	//not in use due to potential bug, see comment in file.ts
-	if (write_events_to_file(users, DATA_FILENAME))
-		console.log("write_events_to_file returned 1");
-}
-
-/**
- * Add new user.
- * Updates data structures and writes changes to file.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user to be added
- * @return {void}
- */
-export function add_user(ht: Hashtable, users: Array<User>, username: string, DATA_FILENAME:string): void {
-	ht_add_event(ht, users, username);
-	if (write_events_to_file(users, DATA_FILENAME))	// users with no events are still saved in file
-		console.log("write_events_to_file returned 1");
-}
-
-/**
- * Checks whether or not a user exists in hashtable.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {string} username - user to look for
- * @return {boolean} - returns:
- *     true: user exists
- *     false: user does not exist
- */
-export function user_exists(ht: Hashtable, username: string, DATA_FILENAME:string): boolean {
-	return ht_entry_exists(ht, username);
-}
-
-/**
- * Retrieve the event list associated with a user.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user's username
- * @return {Event_list | null} - returns:
- *     Event_list: user's event list
- *     null: if user was not found in hashtable
- */
-export function get_event_list(ht: Hashtable, users: Array<User>, username: string, DATA_FILENAME:string): Event_list | null {
-	return ht_get_event_list(ht, users, username);
-}
-
-/**
- * Delete an event.
- * Updates data structures and writes changes to file.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user associated with event
- * @param {Event} event - event to delete
- * @return {void}
- */
-export function delete_event(ht: Hashtable, users: Array<User>, username: string, event: Event, DATA_FILENAME:string): void {
-	ht_delete_event(ht, users, username, event);
-	if (write_events_to_file(users, DATA_FILENAME))
-		console.log("write_events_to_file returned 1");
-
-}
-
-/**
- * Delete a user and all events associated with that user.
- * Updates data structures and writes changes to file.
- * @param {Hashtable} ht - hashtable for user lookup
- * @param {Array<User>} users - array of users
- * @param {string} username - user
- * @return {void}
- */
-export function delete_user(ht: Hashtable, users: Array<User>, username: string, DATA_FILENAME:string): void {
-	ht_delete_event(ht, users, username);
-	if (write_events_to_file(users, DATA_FILENAME))
-		console.log("write_events_to_file returned 1");
 }
