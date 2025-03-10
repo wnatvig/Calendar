@@ -370,19 +370,19 @@ export function user_select_event(event_list: Event_list): Event | null {
 }
 /**
  * 
- * @param dayStr - the day of the event as a string
- * @param monthStr - the month of the event as a string
+ * @param dayStr - the day of the event as a string 
+ * @param monthStr - the month of the event as a string (example: "3" meaning march)
  * @param yearStr - the year of the event as a string
  * @param startTimeStr - the start time of the event as a string (example: "10:00")
  * @param endTimeStr - the end time of the event as a string (example: "11:00")
  * @param description - the description of the event
- * @returns an array with the  event and 0 if correctly parsed,
- *          an array with null and 1 if year is not a number,
- *          an array with null and 2 if month is outside of range
- *          an array with null and 3 if day is outside of range
- *          an array with null and 4 if not valid start time
- *          an array with null and 5 id not valid end time
- *          an array with null and 6 if end time is before start time
+ * @returns an array with the  event and 0 if correctly parsed [event, 0],
+ *          an array with null and 1 if year is not a number [null, 1], 
+ *          an array with null and 2 if month is outside of range [null, 2],
+ *          an array with null and 3 if day is outside of range [null, 3],
+ *          an array with null and 4 if not valid start time [null, 4],
+ *          an array with null and 5 id not valid end time [null, 5],
+ *          an array with null and 6 if end time is before start time [null, 6].
  */
 export function parse_event_input(
     dayStr: string,
@@ -393,25 +393,20 @@ export function parse_event_input(
     description: string
 ): [Event | null, number] {
     
-    // till siffror
     const day = Number(dayStr);
     const month = Number(monthStr);
     const year = Number(yearStr);
     const startTime = parse_time(startTimeStr);
     const endTime = parse_time(endTimeStr);
 
-    //datum
-    //if (isNaN(year) || year < get_current_year()) return [null, 1]; // år
-    //if (isNaN(month) || month < get_current_month() || month > 12) return [null, 2]; // månad
-    //if (isNaN(day) || day < get_current_day() || day > month_length(year, month)) return [null, 3]; // dag
-    if (isNaN(year)) return [null, 1]; // år
-    if (isNaN(month) || month < 1 || month > 12) return [null, 2]; // månad
-    if (isNaN(day) || day < 1 || day > month_length(year, month)) return [null, 3]; // dag
+    if (isNaN(year)) return [null, 1];
+    if (isNaN(month) || month < 1 || month > 12) return [null, 2];
+    if (isNaN(day) || day < 1 || day > month_length(year, month)) return [null, 3];
 
     //tid
-    if (startTime === null) return [null, 4]; //starttid
-    if (endTime === null) return [null, 5]; //sluttid
-    if (startTime > endTime) return [null, 6]; //starttid före sluttid
+    if (startTime === null) return [null, 4]; 
+    if (endTime === null) return [null, 5];
+    if (startTime > endTime) return [null, 6];
 
     const event: Event = {
         day: day,
@@ -422,7 +417,7 @@ export function parse_event_input(
         description: description
     };
 
-    return [event, 0]; //nummer 0 vilket betyder korrekt
+    return [event, 0];
 }
  /**
   * Edits an event by asking user for details
@@ -432,7 +427,7 @@ export function parse_event_input(
   * @param username - the name of the user whos event is being edited
   * @param event_list - the users list of events
   * @param old_event - the event to be edited
-  * @returns it changes the Event_list but returns void
+  * @returns void, changes the Event_list
   */
 export function edit_event(ht: Hashtable, users: Array<User>, username: string, event_list: Event_list, old_event: Event): void {
     console.log("Enter new details for the event.");
@@ -484,7 +479,7 @@ export function edit_event(ht: Hashtable, users: Array<User>, username: string, 
 /**
  * it correctly parses string versions of time
  * @param timeStr - a string representing either the start or end time of the event (example: "13:20")
- * @returns the time but as a number instead of string (example: "10:00" => 1000)
+ * @returns the time but as a number instead of string (input: "10:00" would return: 1000)
  */
 export function parse_time(timeStr: string): number | null {
     const parts = timeStr.split(":");
@@ -496,7 +491,7 @@ export function parse_time(timeStr: string): number | null {
     if (isNaN(hours) || hours < 0 || hours > 23) return null;
     if (isNaN(minutes) || minutes < 0 || minutes > 59) return null;
 
-    return hours * 100 + minutes; //ex 15*100+15=1515
+    return hours * 100 + minutes;
 }
 
 /**
