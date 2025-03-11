@@ -9,8 +9,6 @@ import { init_hashtable, load_events, add_event, add_user, user_exists,
 
 const pt = require('prompt-sync')();
 
-//creates the hashtable and array of users and then fills them with all the data
-//we have on them
 let ht: Hashtable = init_hashtable();
 let users: Array<User> = [];
 load_events(ht, users);
@@ -71,11 +69,10 @@ while(true) {
 	month = init_month(eventlist);
     let next_event = false;
     while (start) {
-		//clear
+
 		for (let i = 0; i < 100; i++){
             console.log();
         }
-		//console.log('\x1bc');
 
         display_month(month, eventlist, selected_day);
         if(next_event){

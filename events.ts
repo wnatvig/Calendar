@@ -54,9 +54,9 @@ export function add_event_to_event_list(event: Event, event_list: Event_list): n
 		return 1;
     
     if (event_list.events[month_index] === undefined) {
-        event_list.events[month_index] = []; //sätter en array där det inte finns ngt
+        event_list.events[month_index] = [];
     }
-    event_list.events[month_index].push(event); //appendar eventet till rätt ställe
+    event_list.events[month_index].push(event);
 
 	return 0;
 }
@@ -75,7 +75,7 @@ export function delete_event_from_event_list(event: Event, event_list: Event_lis
 	if (month_index < 0)
 		return 1;
 
-	if (event_list.events[month_index] === undefined)	//event does not exist in eventlist
+	if (event_list.events[month_index] === undefined)
 		return 2;
 
 	let found = false;
@@ -90,7 +90,7 @@ export function delete_event_from_event_list(event: Event, event_list: Event_lis
 			e.description === event.description) {
 			
 			found = true;
-			event_list.events[month_index].splice(i, 1);	//remove event at index i
+			event_list.events[month_index].splice(i, 1);
 			break;
 			
 		}
