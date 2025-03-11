@@ -452,8 +452,8 @@ export function edit_event(ht: Hashtable, users: Array<User>, username: string, 
         return null;
     });
 
-    const new_start_time = parse_time(pt("Enter new start time: "));
-    const new_end_time = parse_time(pt("Enter new end time: "));
+    const new_start_time = prompt_for_time("Enter new start time: ");
+    const new_end_time = prompt_for_time("Enter new end time:", new_start_time);
 
     if (new_start_time === null || new_end_time === null || new_start_time > new_end_time) {
         console.log("Invalid time input. Start time must be before end time.");
