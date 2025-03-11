@@ -1,0 +1,9 @@
+INSTALL DEPENDENCIES:
+npm i --save-dev @types/node
+npm i --save prompt-sync
+
+COMPILE
+tsc --strict main.ts
+
+RUN
+node main.js
