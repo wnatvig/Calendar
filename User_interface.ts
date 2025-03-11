@@ -370,19 +370,20 @@ export function user_select_event(event_list: Event_list): Event | null {
 }
 /**
  * 
- * @param dayStr - the day of the event as a string 
- * @param monthStr - the month of the event as a string (example: "3" meaning march)
- * @param yearStr - the year of the event as a string
- * @param startTimeStr - the start time of the event as a string (example: "10:00")
- * @param endTimeStr - the end time of the event as a string (example: "11:00")
- * @param description - the description of the event
- * @returns an array with the  event and 0 if correctly parsed [event, 0],
- *          an array with null and 1 if year is not a number [null, 1], 
- *          an array with null and 2 if month is outside of range [null, 2],
- *          an array with null and 3 if day is outside of range [null, 3],
- *          an array with null and 4 if not valid start time [null, 4],
- *          an array with null and 5 id not valid end time [null, 5],
- *          an array with null and 6 if end time is before start time [null, 6].
+ * @param {String} dayStr - the day of the event as a string 
+ * @param {String} monthStr - the month of the event as a string (example: "3" meaning march)
+ * @param {String} yearStr - the year of the event as a string
+ * @param {String} startTimeStr - the start time of the event as a string (example: "10:00")
+ * @param {String} endTimeStr - the end time of the event as a string (example: "11:00")
+ * @param {String} description - the description of the event
+ * @returns {[Event | null, number]} an array with the  event and 0 if correctly parsed [event, 0],
+ *          on invalid input [null, n] where n = 
+ *          1 if invalid year
+ *          2 if invalid month
+ *          3 if invalid day
+ *          4 if invalid start time
+ *          5 if invalid end time
+ *          6 if end time before start time
  */
 export function parse_event_input(
     dayStr: string,
@@ -422,11 +423,11 @@ export function parse_event_input(
  /**
   * Edits an event by asking user for details
   * and then deleting the old one and creating the new one.
-  * @param ht - the hashtable storing users and its events
-  * @param users - the array of users
-  * @param username - the name of the user whos event is being edited
-  * @param event_list - the users list of events
-  * @param old_event - the event to be edited
+  * @param {Hashtable} ht - the hashtable storing users and its events
+  * @param {Array<User>} users - the array of users
+  * @param {String} username - the name of the user whos event is being edited
+  * @param {Event_list} event_list - the users list of events
+  * @param {Event} old_event - the event to be edited
   * @returns void, changes the Event_list
   */
 export function edit_event(ht: Hashtable, users: Array<User>, username: string, event_list: Event_list, old_event: Event): void {
@@ -478,7 +479,7 @@ export function edit_event(ht: Hashtable, users: Array<User>, username: string, 
 }
 /**
  * it correctly parses string versions of time
- * @param timeStr - a string representing either the start or end time of the event (example: "13:20")
+ * @param {String} timeStr - a string representing either the start or end time of the event (example: "13:20")
  * @returns the time but as a number instead of string (input: "10:00" would return: 1000)
  */
 export function parse_time(timeStr: string): number | null {
