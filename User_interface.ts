@@ -332,17 +332,17 @@ export function user_select_event(event_list: Event_list): Event | null {
         return null;
     });
 
-    const monthIndex = get_month_index(event_list.base_year,event_list.base_month, year, month);
+    const month_index = get_month_index(event_list.base_year,event_list.base_month, year, month);
 
     const date = prompt_for_number("Enter date: ", (num: number) => {
-        if (num < 1 || num > month_length(year, monthIndex + 1)) {
-            return `Invalid entry: ${NAMES_MONTHS[monthIndex]} only has ${month_length(year, monthIndex + 1)} days`;
+        if (num < 1 || num > month_length(year, month_index + 1)) {
+            return `Invalid entry: ${NAMES_MONTHS[month_index]} only has ${month_length(year, month_index + 1)} days`;
         }
         return null;
     });
 
-    const events_on_date = event_list.events[monthIndex] 
-        ? event_list.events[monthIndex].filter(event => event.year === year && event.day === date) 
+    const events_on_date = event_list.events[month_index] 
+        ? event_list.events[month_index].filter(event => event.year === year && event.day === date) 
         : [];
 
     if (events_on_date.length === 0) {
@@ -370,11 +370,11 @@ export function user_select_event(event_list: Event_list): Event | null {
 }
 /**
  * 
- * @param {String} dayStr - the day of the event as a string 
- * @param {String} monthStr - the month of the event as a string (example: "3" meaning march)
- * @param {String} yearStr - the year of the event as a string
- * @param {String} startTimeStr - the start time of the event as a string (example: "10:00")
- * @param {String} endTimeStr - the end time of the event as a string (example: "11:00")
+ * @param {String} day_str - the day of the event as a string 
+ * @param {String} month_str - the month of the event as a string (example: "3" meaning march)
+ * @param {String} year_str - the year of the event as a string
+ * @param {String} start_time_str - the start time of the event as a string (example: "10:00")
+ * @param {String} end_time_str - the end time of the event as a string (example: "11:00")
  * @param {String} description - the description of the event
  * @returns {[Event | null, number]} an array with the  event and 0 if correctly parsed [event, 0],
  *          on invalid input [null, n] where n = 
@@ -386,35 +386,35 @@ export function user_select_event(event_list: Event_list): Event | null {
  *          6 if end time before start time
  */
 export function parse_event_input(
-    dayStr: string,
-    monthStr: string,
-    yearStr: string,
-    startTimeStr: string,
-    endTimeStr: string,
+    day_str: string,
+    month_str: string,
+    year_str: string,
+    start_time_str: string,
+    end_time_str: string,
     description: string
 ): [Event | null, number] {
     
-    const day = Number(dayStr);
-    const month = Number(monthStr);
-    const year = Number(yearStr);
-    const startTime = parse_time(startTimeStr);
-    const endTime = parse_time(endTimeStr);
+    const day = Number(day_str);
+    const month = Number(month_str);
+    const year = Number(year_str);
+    const start_time = parse_time(start_time_str);
+    const end_time = parse_time(end_time_str);
 
     if (isNaN(year)) return [null, 1];
     if (isNaN(month) || month < 1 || month > 12) return [null, 2];
     if (isNaN(day) || day < 1 || day > month_length(year, month)) return [null, 3];
 
     //tid
-    if (startTime === null) return [null, 4]; 
-    if (endTime === null) return [null, 5];
-    if (startTime > endTime) return [null, 6];
+    if (start_time === null) return [null, 4]; 
+    if (end_time === null) return [null, 5];
+    if (start_time > end_time) return [null, 6];
 
     const event: Event = {
         day: day,
         month: month,
         year: year,
-        time_start: startTime,
-        time_end: endTime,
+        time_start: start_time,
+        time_end: end_time,
         description: description
     };
 
@@ -479,11 +479,11 @@ export function edit_event(ht: Hashtable, users: Array<User>, username: string, 
 }
 /**
  * it correctly parses string versions of time
- * @param {String} timeStr - a string representing either the start or end time of the event (example: "13:20")
+ * @param {String} time_str - a string representing either the start or end time of the event (example: "13:20")
  * @returns the time but as a number instead of string (input: "10:00" would return: 1000)
  */
-export function parse_time(timeStr: string): number | null {
-    const parts = timeStr.split(":");
+export function parse_time(time_str: string): number | null {
+    const parts = time_str.split(":");
     if (parts.length !== 2) return null;
     
     const hours = Number(parts[0]);
